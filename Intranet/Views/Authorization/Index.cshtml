@@ -1,0 +1,68 @@
+﻿@model IEnumerable<Intranet.ViewModels.AuthorizationVM>
+
+@{
+    ViewData["Title"] = "View";
+}
+
+<h1>View</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.HORA_SALIDA)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MOTIVO.NOMBRE_MOTIVO)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DESCRIPCION)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FECHA_CREACION)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.HORA_SALIDA_PROG)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MOTIVO.NOMBRE_MOTIVO)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DESCRIPCION)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FECHA_CREACION.Value)
+            </td>
+            <td>
+                <div class="form-inline">
+                    <button type="button" title="Editar" value="Editar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Edit", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                        <i class="fa fa-edit"></i>
+                        Editar
+                    </button>
+                    <button type="button" title="Detalle" value="Detalle" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                        <i class="fa fa-eye"></i>
+                        Detalle
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" title="Borrar" value="Borrar" onclick="location.href='@Url.Action("Delete", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                        <i class="fa fa-trash-o"></i>
+                        Borrar
+                    </button>
+                </div>
+                <!--
+                Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                -->
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

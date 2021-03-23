@@ -1,0 +1,148 @@
+﻿@model Intranet.ViewModels.AuthorizationVM
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>AuthorizationVM</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="AUTORIZACION_ID" class="control-label"></label>
+                <input asp-for="AUTORIZACION_ID" class="form-control" />
+                <span asp-validation-for="AUTORIZACION_ID" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="USUARIO_CREA" class="control-label"></label>
+                <input asp-for="USUARIO_CREA" class="form-control" />
+                <span asp-validation-for="USUARIO_CREA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ID_AREA_FUNCIONAL" class="control-label"></label>
+                <input asp-for="ID_AREA_FUNCIONAL" class="form-control" />
+                <span asp-validation-for="ID_AREA_FUNCIONAL" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ID_MOTIVO" class="control-label"></label>
+                <input asp-for="ID_MOTIVO" class="form-control" />
+                <span asp-validation-for="ID_MOTIVO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RETORNO" class="control-label"></label>
+                <input asp-for="RETORNO" class="form-control" />
+                <span asp-validation-for="RETORNO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FECHA_SALIDA_PROG_DATE_TIME" class="control-label"></label>
+                <input asp-for="FECHA_SALIDA_PROG_DATE_TIME" class="form-control" />
+                <span asp-validation-for="FECHA_SALIDA_PROG_DATE_TIME" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FECHA_RETORNO_PROG_DATE_TIME" class="control-label"></label>
+                <input asp-for="FECHA_RETORNO_PROG_DATE_TIME" class="form-control" />
+                <span asp-validation-for="FECHA_RETORNO_PROG_DATE_TIME" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HORA_SALIDA" class="control-label"></label>
+                <input asp-for="HORA_SALIDA" class="form-control" />
+                <span asp-validation-for="HORA_SALIDA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HORA_RETORNO" class="control-label"></label>
+                <input asp-for="HORA_RETORNO" class="form-control" />
+                <span asp-validation-for="HORA_RETORNO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HORA_SALIDA_SEGURIDAD" class="control-label"></label>
+                <input asp-for="HORA_SALIDA_SEGURIDAD" class="form-control" />
+                <span asp-validation-for="HORA_SALIDA_SEGURIDAD" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HORA_RETORNO_SEGURIDAD" class="control-label"></label>
+                <input asp-for="HORA_RETORNO_SEGURIDAD" class="form-control" />
+                <span asp-validation-for="HORA_RETORNO_SEGURIDAD" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="USUARIO_AUTORIZA" class="control-label"></label>
+                <input asp-for="USUARIO_AUTORIZA" class="form-control" />
+                <span asp-validation-for="USUARIO_AUTORIZA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ID_TIPO_USUARIO" class="control-label"></label>
+                <input asp-for="ID_TIPO_USUARIO" class="form-control" />
+                <span asp-validation-for="ID_TIPO_USUARIO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FECHA_CREACION" class="control-label"></label>
+                <input asp-for="FECHA_CREACION" class="form-control" />
+                <span asp-validation-for="FECHA_CREACION" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FECHA_EDICION" class="control-label"></label>
+                <input asp-for="FECHA_EDICION" class="form-control" />
+                <span asp-validation-for="FECHA_EDICION" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="USUARIO_EDITA" class="control-label"></label>
+                <input asp-for="USUARIO_EDITA" class="form-control" />
+                <span asp-validation-for="USUARIO_EDITA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ID_ESTADO" class="control-label"></label>
+                <input asp-for="ID_ESTADO" class="form-control" />
+                <span asp-validation-for="ID_ESTADO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DESCRIPCION" class="control-label"></label>
+                <input asp-for="DESCRIPCION" class="form-control" />
+                <span asp-validation-for="DESCRIPCION" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FECHA_ULTIMO_ESTADO" class="control-label"></label>
+                <input asp-for="FECHA_ULTIMO_ESTADO" class="form-control" />
+                <span asp-validation-for="FECHA_ULTIMO_ESTADO" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FECHA_SALIDA_PROG" class="control-label"></label>
+                <input asp-for="FECHA_SALIDA_PROG" class="form-control" />
+                <span asp-validation-for="FECHA_SALIDA_PROG" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HORA_SALIDA_PROG" class="control-label"></label>
+                <input asp-for="HORA_SALIDA_PROG" class="form-control" />
+                <span asp-validation-for="HORA_SALIDA_PROG" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FECHA_RETORNO_PROG" class="control-label"></label>
+                <input asp-for="FECHA_RETORNO_PROG" class="form-control" />
+                <span asp-validation-for="FECHA_RETORNO_PROG" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="HORA_RETORNO_PROG" class="control-label"></label>
+                <input asp-for="HORA_RETORNO_PROG" class="form-control" />
+                <span asp-validation-for="HORA_RETORNO_PROG" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UNIDAD_ORGANICA" class="control-label"></label>
+                <input asp-for="UNIDAD_ORGANICA" class="form-control" />
+                <span asp-validation-for="UNIDAD_ORGANICA" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

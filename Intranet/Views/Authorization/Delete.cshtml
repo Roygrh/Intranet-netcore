@@ -1,0 +1,164 @@
+﻿@model Intranet.ViewModels.AuthorizationVM
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h1>Delete</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>AuthorizationVM</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AUTORIZACION_ID)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AUTORIZACION_ID)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.USUARIO_CREA)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.USUARIO_CREA)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ID_AREA_FUNCIONAL)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ID_AREA_FUNCIONAL)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ID_MOTIVO)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ID_MOTIVO)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.RETORNO)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.RETORNO)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FECHA_SALIDA_PROG_DATE_TIME)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FECHA_SALIDA_PROG_DATE_TIME)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FECHA_RETORNO_PROG_DATE_TIME)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FECHA_RETORNO_PROG_DATE_TIME)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HORA_SALIDA)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HORA_SALIDA)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HORA_RETORNO)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HORA_RETORNO)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HORA_SALIDA_SEGURIDAD)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HORA_SALIDA_SEGURIDAD)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HORA_RETORNO_SEGURIDAD)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HORA_RETORNO_SEGURIDAD)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.USUARIO_AUTORIZA)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.USUARIO_AUTORIZA)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ID_TIPO_USUARIO)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ID_TIPO_USUARIO)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FECHA_CREACION)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FECHA_CREACION)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FECHA_EDICION)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FECHA_EDICION)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.USUARIO_EDITA)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.USUARIO_EDITA)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ID_ESTADO)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ID_ESTADO)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DESCRIPCION)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DESCRIPCION)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FECHA_ULTIMO_ESTADO)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FECHA_ULTIMO_ESTADO)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FECHA_SALIDA_PROG)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FECHA_SALIDA_PROG)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HORA_SALIDA_PROG)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HORA_SALIDA_PROG)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FECHA_RETORNO_PROG)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FECHA_RETORNO_PROG)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.HORA_RETORNO_PROG)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.HORA_RETORNO_PROG)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.UNIDAD_ORGANICA)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.UNIDAD_ORGANICA)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
