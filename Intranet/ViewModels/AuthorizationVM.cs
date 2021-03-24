@@ -47,8 +47,8 @@ namespace Intranet.ViewModels
         public string UNIDAD_ORGANICA { get; set; }
         [Display(Name = "Archivo")]
         public IFormFile FILE { get; set; }
-        //[Display(Name = "Usuario")]
-        //public BasicUserInformationVM USER { get; set; }
+        [Display(Name = "Usuario")]
+        public BasicUserInformationVM USER { get; set; }
         [Display(Name = "Estado")]
         public AuthorizationStateVM ESTADO { get; set; }
         [Display(Name = "Motivo")]

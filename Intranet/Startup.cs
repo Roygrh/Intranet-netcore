@@ -1,5 +1,6 @@
 using Intranet.Data;
-using Intranet.Services.UnitOfWork;
+using Intranet.Services.AuthorizationState;
+using Intranet.Services.Unit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,7 @@ namespace Intranet
 
             services.AddControllersWithViews();
             services.AddTransient<UnitOfWork>();
+            services.AddTransient<AuthorizationStateManagement>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

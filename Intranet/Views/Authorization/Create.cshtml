@@ -7,136 +7,202 @@
 <h1>Solicitar una papeleta</h1>
 
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="AUTORIZACION_ID" class="control-label"></label>
-                <input asp-for="AUTORIZACION_ID" class="form-control" />
-                <span asp-validation-for="AUTORIZACION_ID" class="text-danger"></span>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <hr />
+        <div class="card border-dark mb-3" style="max-width: 70rem;">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="card-header text-dark"><h4>Complete los datos requeridos</h4></div>
+            <div class="card-body text-dark">
+
+                <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
+                    <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <label asp-for="ESTADO" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            </div>
+                            <input asp-for="ESTADO.NOMBRE_ESTADO" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="USER.USER_NAME" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            </div>
+                            <input asp-for="USER.USER_NAME" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="UNIDAD_ORGANICA" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            </div>
+                            <input asp-for="UNIDAD_ORGANICA" class="form-control" disabled="disabled" />
+                            <!--Html.HiddenFor(model => model.ID_AREA_FUNCIONAL)Html.HiddenFor(model => model.ID_TIPO_USUARIO)-->
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="USUARIO_CREA" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-calendar"></i></span>
+                            </div>
+                            <input asp-for="USUARIO_CREA" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_CREACION" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            </div>
+                            <input class="form-control text-box single-line" data-val="true" data-val-date="The field Fecha de registro must be a date." disabled="disabled" id="FECHA_CREACION" name="FECHA_CREACION" type="text" value="">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-xl-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                    <div class="form-group">
+                        <label asp-for="LISTA_DE_MOTIVOS" class="control-label col-md-4 font-weight-bold justify-content-xl-start justify-content-sm-start justify-content-md-start justify-content-lg-start"></label>
+                        <div class="form-inline input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-list-ul"></i></span>
+                            </div>
+                            &nbsp;&nbsp;&nbsp;
+                            <div class="form-check">
+                                @foreach (var motive in Model.LISTA_DE_MOTIVOS)
+                                {
+                                    <div class="custom-control custom-radio custom-control-inline" onclick="marcar(this)">
+                                        <input type="radio" class="custom-control-input check-button" id="@motive.MOTIVO_ID" name="motives" value="@motive.IsSelected">
+                                        <label class="custom-control-label" for="@motive.MOTIVO_ID">@motive.NOMBRE_MOTIVO.ToLower()</label>
+                                    </div>
+                                }
+                            </div>
+                            <span class="text-danger font-weight-bold motive-message"></span>
+                        </div>
+                        <!--Html.HiddenFor(model => model.ID_MOTIVO)-->
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_SALIDA_PROG" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-calendar"></i></span>
+                            </div>
+                            <input asp-for="FECHA_SALIDA_PROG" class="form-control exit" , placeholder="ingrese la fecha de salida" onfocusout="validateDate(this)" />
+                            @Html.ValidationMessageFor(model => model.FECHA_SALIDA_PROG, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_RETORNO_PROG" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-calendar"></i></span>
+                            </div>
+                            <input asp-for="FECHA_RETORNO_PROG" class="form-control return" , placeholder="ingrese la fecha de salida" onfocusout="validateDate(this)" />
+                            @Html.ValidationMessageFor(model => model.FECHA_RETORNO_PROG, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="HORA_SALIDA_PROG" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group clockpicker">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-clock-o"></i></span>
+                            </div>
+                            <input class="form-control text-box single-line right-format return" id="HORA_SALIDA_PROG" name="HORA_SALIDA_PROG" placeholder="ingrese la hora de salida" type="text" value="@DateTime.Now.ToString("hh:mm tt")">
+                            @Html.ValidationMessageFor(model => model.HORA_SALIDA_PROG, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="HORA_RETORNO_PROG" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group clockpicker">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-clock-o"></i></span>
+                            </div>
+                            <input class="form-control text-box single-line right-format return" id="HORA_RETORNO_PROG" name="HORA_RETORNO_PROG" placeholder="ingrese la hora de retorno" type="text" value="">
+                            @Html.ValidationMessageFor(model => model.HORA_RETORNO_PROG, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+                </div>
+
+                <!--*****************************************-->
+
+                <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
+                    <div class="form-group form-inline col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <span class="validate-formulary text-danger font-weight-bold"></span>
+                    </div>
+                    <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitches">
+                            <label class="custom-control-label" for="customSwitches">Sin hora de retorno</label>
+                        </div>
+                        <!--Html.HiddenFor(model => model.RETORNO, new { Value = "SI" })-->
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+                    <div class="form-group col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                        <label asp-for="DESCRIPCION" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="col-md-12 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            </div>
+                            <textarea asp-for="DESCRIPCION" class = "form-control", placeholder = "Ingresa la descripción" style = "max-width:100%;"></textarea>
+                            @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-8 form-inline">
+                        <span class="btn btn-outline-secondary btn-file" onchange="showName()" id="file-button">
+                            <i id="icon-file" class="fa fa-upload"></i>
+                            <span id="name-button">Adjuntar un archivo para la papeleta</span>
+                            <input type="file" name="file" id="file" />
+                        </span>
+                        &nbsp;
+                        <span id="fileName"></span>
+                        <br /><br />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button id="save" type="submit" value="Create" class="btn btn-outline-secondary">
+                            <i class="fa fa-save"></i>
+                            Registrar
+                        </button>
+                    </div>
+                </div>
+
+                <!--*****************************************-->
             </div>
-            <div class="form-group">
-                <label asp-for="USUARIO_CREA" class="control-label"></label>
-                <input asp-for="USUARIO_CREA" class="form-control" />
-                <span asp-validation-for="USUARIO_CREA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ID_AREA_FUNCIONAL" class="control-label"></label>
-                <input asp-for="ID_AREA_FUNCIONAL" class="form-control" />
-                <span asp-validation-for="ID_AREA_FUNCIONAL" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ID_MOTIVO" class="control-label"></label>
-                <input asp-for="ID_MOTIVO" class="form-control" />
-                <span asp-validation-for="ID_MOTIVO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RETORNO" class="control-label"></label>
-                <input asp-for="RETORNO" class="form-control" />
-                <span asp-validation-for="RETORNO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_SALIDA_PROG_DATE_TIME" class="control-label"></label>
-                <input asp-for="FECHA_SALIDA_PROG_DATE_TIME" class="form-control" />
-                <span asp-validation-for="FECHA_SALIDA_PROG_DATE_TIME" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_RETORNO_PROG_DATE_TIME" class="control-label"></label>
-                <input asp-for="FECHA_RETORNO_PROG_DATE_TIME" class="form-control" />
-                <span asp-validation-for="FECHA_RETORNO_PROG_DATE_TIME" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_SALIDA" class="control-label"></label>
-                <input asp-for="HORA_SALIDA" class="form-control" />
-                <span asp-validation-for="HORA_SALIDA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_RETORNO" class="control-label"></label>
-                <input asp-for="HORA_RETORNO" class="form-control" />
-                <span asp-validation-for="HORA_RETORNO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_SALIDA_SEGURIDAD" class="control-label"></label>
-                <input asp-for="HORA_SALIDA_SEGURIDAD" class="form-control" />
-                <span asp-validation-for="HORA_SALIDA_SEGURIDAD" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_RETORNO_SEGURIDAD" class="control-label"></label>
-                <input asp-for="HORA_RETORNO_SEGURIDAD" class="form-control" />
-                <span asp-validation-for="HORA_RETORNO_SEGURIDAD" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="USUARIO_AUTORIZA" class="control-label"></label>
-                <input asp-for="USUARIO_AUTORIZA" class="form-control" />
-                <span asp-validation-for="USUARIO_AUTORIZA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ID_TIPO_USUARIO" class="control-label"></label>
-                <input asp-for="ID_TIPO_USUARIO" class="form-control" />
-                <span asp-validation-for="ID_TIPO_USUARIO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_CREACION" class="control-label"></label>
-                <input asp-for="FECHA_CREACION" class="form-control" />
-                <span asp-validation-for="FECHA_CREACION" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_EDICION" class="control-label"></label>
-                <input asp-for="FECHA_EDICION" class="form-control" />
-                <span asp-validation-for="FECHA_EDICION" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="USUARIO_EDITA" class="control-label"></label>
-                <input asp-for="USUARIO_EDITA" class="form-control" />
-                <span asp-validation-for="USUARIO_EDITA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ID_ESTADO" class="control-label"></label>
-                <input asp-for="ID_ESTADO" class="form-control" />
-                <span asp-validation-for="ID_ESTADO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DESCRIPCION" class="control-label"></label>
-                <input asp-for="DESCRIPCION" class="form-control" />
-                <span asp-validation-for="DESCRIPCION" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_ULTIMO_ESTADO" class="control-label"></label>
-                <input asp-for="FECHA_ULTIMO_ESTADO" class="form-control" />
-                <span asp-validation-for="FECHA_ULTIMO_ESTADO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_SALIDA_PROG" class="control-label"></label>
-                <input asp-for="FECHA_SALIDA_PROG" class="form-control" />
-                <span asp-validation-for="FECHA_SALIDA_PROG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_SALIDA_PROG" class="control-label"></label>
-                <input asp-for="HORA_SALIDA_PROG" class="form-control" />
-                <span asp-validation-for="HORA_SALIDA_PROG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_RETORNO_PROG" class="control-label"></label>
-                <input asp-for="FECHA_RETORNO_PROG" class="form-control" />
-                <span asp-validation-for="FECHA_RETORNO_PROG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_RETORNO_PROG" class="control-label"></label>
-                <input asp-for="HORA_RETORNO_PROG" class="form-control" />
-                <span asp-validation-for="HORA_RETORNO_PROG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UNIDAD_ORGANICA" class="control-label"></label>
-                <input asp-for="UNIDAD_ORGANICA" class="form-control" />
-                <span asp-validation-for="UNIDAD_ORGANICA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <div>
     <a asp-action="Index">Back to List</a>
