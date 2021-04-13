@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<Intranet.ViewModels.AuthorizationVM>
 
 @{
-    ViewData["Title"] = "View";
+    ViewData["Title"] = "Lista de papeletas registradas";
 }
 
-<h1>View</h1>
+<h1>Lista de papeletas registradas</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" type="button" class="btn btn-outline-info">Solicitar comisión</a>
 </p>
 <table class="table">
     <thead>
@@ -19,7 +19,7 @@
                 @Html.DisplayNameFor(model => model.MOTIVO.NOMBRE_MOTIVO)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DESCRIPCION)
+                @Html.DisplayNameFor(model => model.ESTADO)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.FECHA_CREACION)
@@ -36,7 +36,7 @@
                 @Html.DisplayFor(modelItem => item.MOTIVO.NOMBRE_MOTIVO)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DESCRIPCION)
+                @Html.DisplayFor(modelItem => item.ESTADO.NOMBRE_ESTADO)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FECHA_CREACION.Value)
@@ -51,9 +51,9 @@
                         <i class="fa fa-eye"></i>
                         Detalle
                     </button>
-                    <button type="button" class="btn btn-outline-danger" title="Borrar" value="Borrar" onclick="location.href='@Url.Action("Delete", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                    <button type="button" class="btn btn-outline-danger" title="Borrar" value="Borrar" onclick="location.href='@Url.Action("Cancel", "Authorization", new { id = item.AUTORIZACION_ID })'">
                         <i class="fa fa-trash-o"></i>
-                        Borrar
+                        Cancelar
                     </button>
                 </div>
                 <!--

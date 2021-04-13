@@ -1,5 +1,6 @@
 ﻿using Intranet.Data;
 using Intranet.Models;
+using Intranet.Models.Sicon;
 using Intranet.Services.Repository;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Intranet.Services.Unit
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private ApplicationDbContext _context;
+        private ApplicationSiconDbContext _siconContext;
         private GenericRepository<IT_CONTENIDO_GENERAL> ContentRepository;
         private GenericRepository<IT_TIPO_CONTENIDO> ContentTypeRepository;
         private GenericRepository<IT_AUTORIZACION> AuthorizationRepository;
@@ -19,10 +21,14 @@ namespace Intranet.Services.Unit
         private GenericRepository<IT_MOTIVO_AUTORIZACION> AuthorizationMotiveRepository;
         private GenericRepository<IT_CONTENIDO_GENERAL_AUDITORIA> ContentAuditoryRepository;
         private GenericRepository<IT_AUTORIZACION_AUDITORIA> AuthorizationAuditoryRepository;
+        private SiconGenericRepository<ca_personal> PersonalRepository;
+        private SiconGenericRepository<intranet_asistencia> AttendanceRepository;
+        private SiconGenericRepository<intranet_vacaciones> VacationsRepository;
 
-        public UnitOfWork(ApplicationDbContext context)
+        public UnitOfWork(ApplicationDbContext context, ApplicationSiconDbContext siconContext)
         {
             this._context = context;
+            this._siconContext = siconContext;
         }
 
         IRepository<IT_CONTENIDO_GENERAL> IUnitOfWork.Contents
@@ -126,6 +132,45 @@ namespace Intranet.Services.Unit
                     this.AuthorizationAuditoryRepository = new GenericRepository<IT_AUTORIZACION_AUDITORIA>(_context);
                 }
                 return AuthorizationAuditoryRepository;
+            }
+        }
+
+        IRepository<ca_personal> IUnitOfWork.PersonalRepository
+        {
+            get
+            {
+
+                if (this.PersonalRepository == null)
+                {
+                    this.PersonalRepository = new SiconGenericRepository<ca_personal>(_siconContext);
+                }
+                return PersonalRepository;
+            }
+        }
+
+        IRepository<intranet_asistencia> IUnitOfWork.AttendanceRepository
+        {
+            get
+            {
+
+                if (this.AttendanceRepository == null)
+                {
+                    this.AttendanceRepository = new SiconGenericRepository<intranet_asistencia>(_siconContext);
+                }
+                return AttendanceRepository;
+            }
+        }
+
+        IRepository<intranet_vacaciones> IUnitOfWork.VacationsRepository
+        {
+            get
+            {
+
+                if (this.VacationsRepository == null)
+                {
+                    this.VacationsRepository = new SiconGenericRepository<intranet_vacaciones>(_siconContext);
+                }
+                return VacationsRepository;
             }
         }
 

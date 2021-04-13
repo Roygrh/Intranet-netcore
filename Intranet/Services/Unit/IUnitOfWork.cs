@@ -1,4 +1,5 @@
 ﻿using Intranet.Models;
+using Intranet.Models.Sicon;
 using Intranet.Services.Repository;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,9 @@ namespace Intranet.Services.Unit
         IRepository<IT_MOTIVO_AUTORIZACION> AuthorizationMotive { get; }
         IRepository<IT_CONTENIDO_GENERAL_AUDITORIA> ContentsAuditory { get; }
         IRepository<IT_AUTORIZACION_AUDITORIA> AuthorizationAuditory { get; }
+        IRepository<ca_personal> PersonalRepository { get; }
+        IRepository<intranet_asistencia> AttendanceRepository { get; }
+        IRepository<intranet_vacaciones> VacationsRepository { get; }
         void Commit();
         void RollBack();
     }

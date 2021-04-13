@@ -1,5 +1,6 @@
 using Intranet.Data;
 using Intranet.Services.AuthorizationState;
+using Intranet.Services.DateTimeManagement;
 using Intranet.Services.Unit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,12 +29,17 @@ namespace Intranet
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
             services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("IntranetConnection")));
+
+            services.AddDbContext<ApplicationSiconDbContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("SiconConnection")));
 
             services.AddControllersWithViews();
             services.AddTransient<UnitOfWork>();
             services.AddTransient<AuthorizationStateManagement>();
+            services.AddTransient<DataTimeManagement>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

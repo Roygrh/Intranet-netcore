@@ -5,6 +5,18 @@
     {
       "library": "twitter-bootstrap@4.6.0",
       "destination": "wwwroot/lib/twitter-bootstrap/"
+    },
+    {
+      "library": "moment.js@2.29.1",
+      "destination": "wwwroot/lib/moment.js/"
+    },
+    {
+      "library": "bootstrap-daterangepicker@3.0.5",
+      "destination": "wwwroot/lib/bootstrap-daterangepicker/"
+    },
+    {
+      "library": "clockpicker@0.0.7",
+      "destination": "wwwroot/lib/clockpicker/"
     }
   ]
 }

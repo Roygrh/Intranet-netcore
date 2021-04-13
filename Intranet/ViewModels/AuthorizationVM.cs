@@ -49,6 +49,10 @@ namespace Intranet.ViewModels
         public IFormFile FILE { get; set; }
         [Display(Name = "Usuario")]
         public BasicUserInformationVM USER { get; set; }
+        [Display(Name = "Usuario")]
+        public PersonalVM OWNERUSER { get; set; }
+        [Display(Name = "Usuario")]
+        public PersonalVM AUTHORIZINGUSER { get; set; }
         [Display(Name = "Estado")]
         public AuthorizationStateVM ESTADO { get; set; }
         [Display(Name = "Motivo")]

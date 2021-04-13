@@ -1,0 +1,285 @@
+﻿@model Intranet.ViewModels.AuthorizationVM
+
+@{
+    if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("pendiente"))
+        ViewData["Title"] = "Comisión pendiente de autorizar";
+    else if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("autorizado"))
+        ViewData["Title"] = "Comisión autorizada";
+    else if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("ejecutado"))
+        ViewData["Title"] = "Comisión ejecutada";
+    else if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("finalizado"))
+        ViewData["Title"] = "Comisión finalizada";
+    else if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("rechazado"))
+        ViewData["Title"] = "Comisión rechazada";
+    else
+        ViewData["Title"] = "Comisión anulada";
+}
+
+@if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("pendiente"))
+{
+    <h1>Comisión pendiente de autorizar</h1>
+}
+else if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("autorizado"))
+{
+    <h1>Comisión autorizada</h1>
+}
+else if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("ejecutado"))
+{
+    <h1>Comisión ejecutada</h1>
+}
+else if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("finalizado"))
+{
+    <h1>Comisión finalizada</h1>
+}
+else if (Model.ESTADO.NOMBRE_ESTADO.ToLower().Equals("rechazado"))
+{
+    <h1>Comisión rechazada</h1>
+}
+else
+{
+    <h1>Comisión anulada</h1>
+}
+
+<hr />
+
+<div class="form-horizontal">
+    <hr />
+    <div class="card border-dark mb-3" style="max-width: 70rem;">
+        <div class="card-header text-dark"><h4>Datos de la comisión</h4></div>
+        <div class="card-body text-dark">
+
+            @Html.HiddenFor(model => model.AUTORIZACION_ID)
+
+            <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
+                <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                    @Html.LabelFor(model => model.ESTADO, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
+                    <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                        </div>
+                        @Html.EditorFor(model => model.ESTADO.NOMBRE_ESTADO, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.HiddenFor(model => model.ID_ESTADO)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    @Html.LabelFor(model => model.OWNERUSER, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
+                    <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                        </div>
+                        @Html.EditorFor(model => model.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    </div>
+                </div>
+
+                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    @Html.LabelFor(model => model.UNIDAD_ORGANICA, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
+                    <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                        </div>
+                        @Html.EditorFor(model => model.UNIDAD_ORGANICA, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.HiddenFor(model => model.ID_AREA_FUNCIONAL)
+                        @Html.HiddenFor(model => model.ID_TIPO_USUARIO)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    @Html.LabelFor(model => model.USUARIO_CREA, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
+                    <div class="col-md-8 form-inline input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        @Html.EditorFor(model => model.USUARIO_CREA, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                    </div>
+                </div>
+
+                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    @Html.LabelFor(model => model.FECHA_CREACION, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                    <div class="col-md-8 form-inline input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                        </div>
+                        <input class="form-control text-box single-line" data-val="true" data-val-date="The field Fecha de registro must be a date." disabled="disabled" id="FECHA_CREACION" name="FECHA_CREACION" type="text" value="@Model.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm:ss tt")">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-xl-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LISTA_DE_MOTIVOS, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold justify-content-xl-start justify-content-sm-start justify-content-md-start justify-content-lg-start" })
+                    <div class="form-inline input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-list-ul"></i></span>
+                        </div>
+                        &nbsp;&nbsp;&nbsp;
+                        <div class="form-check">
+                            @foreach (var motive in Model.LISTA_DE_MOTIVOS)
+                            {
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" class="custom-control-input check-button" id="@motive.MOTIVO_ID" name="motives" value="@motive.IsSelected" checked=@(Model.ID_MOTIVO == motive.MOTIVO_ID) disabled>
+                                    <label class="custom-control-label" for="@motive.MOTIVO_ID">@motive.NOMBRE_MOTIVO.ToLower()</label>
+                                </div>
+                            }
+                        </div>
+                        <span class="text-danger font-weight-bold motive-message"></span>
+                    </div>
+                    @Html.HiddenFor(model => model.ID_MOTIVO)
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    @Html.LabelFor(model => model.FECHA_SALIDA_PROG, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                    <div class="col-md-8 form-inline input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        @Html.EditorFor(model => model.FECHA_SALIDA_PROG, new { htmlAttributes = new { @class = "form-control exit", @placeholder = "ingrese la fecha de salida", onfocusout = "validateDate(this)", @disabled = "disabled" } })
+                    </div>
+                </div>
+
+                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    @Html.LabelFor(model => model.FECHA_RETORNO_PROG, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                    <div class="col-md-8 form-inline input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-calendar"></i></span>
+                        </div>
+                        @if (Model.RETORNO.Equals("NO"))
+                        {
+                            <input class="form-control return text-box single-line" id="FECHA_RETORNO_PROG" name="FECHA_RETORNO_PROG" type="text" value="" disabled>
+                        }
+                        else
+                            @Html.EditorFor(model => model.FECHA_RETORNO_PROG, new { htmlAttributes = new { @class = "form-control return", @disabled = "disabled" } })
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    @Html.LabelFor(model => model.HORA_SALIDA_PROG, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                    <div class="col-md-8 form-inline input-group clockpicker">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        <input class="form-control text-box single-line right-format return" id="HORA_SALIDA_PROG" name="HORA_SALIDA_PROG" placeholder="ingrese la hora de salida" type="text" value="@Model.HORA_SALIDA_PROG" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                    @Html.LabelFor(model => model.HORA_RETORNO_PROG, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
+                    <div class="col-md-8 form-inline input-group clockpicker">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-clock-o"></i></span>
+                        </div>
+                        @if (Model.RETORNO.Equals("NO"))
+                        {
+                            <input class="form-control text-box single-line" id="HORA_RETORNO_PROG" type="text" value="@Model.HORA_RETORNO_PROG" disabled>
+                        }
+                        else
+                        {
+                            <input class="form-control text-box single-line" id="HORA_RETORNO_PROG" name="HORA_RETORNO_PROG" placeholder="ingrese la hora de retorno" type="text" value="@Model.HORA_RETORNO_PROG" disabled>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
+                <div class="form-group form-inline col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                    <span class="validate-formulary text-danger font-weight-bold"></span>
+                </div>
+                <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitches" checked=@Model.RETORNO.Equals("NO") disabled>
+                        @if (@Model.RETORNO.Equals("NO"))
+                        {
+                            <label class="custom-control-label" for="customSwitches">Sin hora de retorno</label>
+                        }
+                        else
+                        {
+                            <label class="custom-control-label" for="customSwitches">Con hora de retorno</label>
+                        }
+                    </div>
+                    @Html.HiddenFor(model => model.RETORNO, new { @Value = Model.RETORNO })
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+                <div class="form-group col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                    @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
+                    <div class="col-md-12 form-inline input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                        </div>
+                        @Html.TextAreaFor(model => model.DESCRIPCION, new { @class = "form-control", @placeholder = "Ingresa la descripción", @style = "max-width:100%;", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-8 form-inline">
+                    @if (Model.FILE != null && Model.FILE.Length > 0)
+                    {
+                        using (Html.BeginForm("DownloadFile", "Authorization", FormMethod.Post))
+                        {
+                            <input type="hidden" id="hfFileId" name="id" />
+                            <input type="submit" id="btnDownload" value="Download" style="display:none" />
+                        }
+                        <button class="btn btn-outline-secondary" href="javascript:;" onclick="DownloadFile(@Model.AUTORIZACION_ID)">
+                            <i class="fa fa-download"></i>
+                            @Model.FILE.FileName
+                        </button>
+                        <hr />
+                    }
+                    else
+                    {
+                        <span class="btn btn-outline-secondary btn-file" id="file-button">
+                            <i id="icon-file" class="fa fa-exclamation"></i>
+                            <span id="name-button">No hay archivo adjunto</span>
+                            <input type="file" name="file" id="file" disabled />
+                        </span>
+                    }
+
+                    &nbsp;
+                    <span id="fileName"></span>
+                    <br /><br />
+                </div>
+            </div>
+            <hr />
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = Model.AUTORIZACION_ID })'">
+                        <i class="fa fa-edit"></i>
+                        Detalle
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div>
+    <a asp-action="Watchview" type="button" class="btn btn-secondary">Volver a la lista</a>
+</div>
+
+<script type="text/javascript">
+    function DownloadFile(fileId) {
+        $("#hfFileId").val(fileId);
+        $("#btnDownload")[0].click();
+    };
+
+    function GetClientReport(id) {
+        window.open('/Authorization/GetReport/' + id, "_blank");
+    };
+</script>

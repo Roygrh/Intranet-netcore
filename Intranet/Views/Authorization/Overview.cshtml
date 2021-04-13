@@ -1,0 +1,410 @@
+﻿@model Intranet.ViewModels.OverviewVM
+
+@{
+    ViewData["Title"] = "Vista de administrador";
+}
+
+<h1>Vista de administrador</h1>
+
+<div class="form-horizontal">
+    <div class="form-horizontal">
+        <div class="input-group d-flex justify-content-center">
+            <input type="search" class="form-control rounded col-xs-8 col-sm-8 col-md-8 col-lg-8" placeholder="Buscar" aria-label="Buscar"
+                   aria-describedby="search-addon" />
+            <button type="button" class="btn btn-outline-dark">buscar</button>
+            <button type="button" class="btn btn-outline-secondary" onclick="changeview()">cambiar de vista</button>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="card border-dark mb-3 main-table" style="max-width: 70rem;">
+        <div class="card-header text-dark"><h4>Datos de las comisiones</h4></div>
+        <div class="card-body text-dark">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="Authorization.ESTADO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="Authorization.ID_MOTIVO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="Authorization.RETORNO" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="Authorization.FECHA_SALIDA_PROG" class="control-label font-weight-bold"></label>
+                        </th>
+                        <th>
+                            <label asp-for="Authorization.FECHA_RETORNO_PROG" class="control-label font-weight-bold"></label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Authorizations)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.LISTA_DE_ESTADOS.Find(m => m.ESTADO_ID.Equals(item.ID_ESTADO)).NOMBRE_ESTADO, new { htmlAttributes = new { @class = "form-control" } })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => modelItem.LISTA_DE_MOTIVOS.Find(m => m.MOTIVO_ID.Equals(item.ID_MOTIVO)).NOMBRE_MOTIVO, new { htmlAttributes = new { @class = "form-control" } })
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.RETORNO, new { htmlAttributes = new { @class = "form-control" } })
+                            </td>
+                            <td>
+                                @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
+                            </td>
+                            <td>
+                                @item.FECHA_SALIDA_PROG_DATE_TIME.Value.ToString("dd/MM/yyyy hh:mm tt")
+                            </td>
+                            @if (item.RETORNO.Trim().ToLower().Equals("si"))
+                            {
+                                <td>
+                                    @item.FECHA_RETORNO_PROG_DATE_TIME.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    <label class="control-label font-weight-bold">--</label>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!--second row start-->
+
+<div class="row">
+    <div class="form-horizontal col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <hr />
+        <div class="card border-dark mb-3" style="max-width: 35rem;">
+            <div class="card-header text-dark"><h4>Pendientes</h4></div>
+            <div class="card-body text-dark">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                Operación
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.PendingAuthorizations)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+                                <td>
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Change-state-admin", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                        <i class="fa fa-edit"></i>
+                                        Operar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" title="Ver comisiones" value="Ver comisiones" class="btn btn-outline-dark" onclick="location.href='@Url.Action("overview-state", "Authorization", new { id = "pendiente" })'">
+                <i class="fa fa-table"></i>
+                Ver comisiones
+            </button>
+        </div>
+
+    </div>
+
+    <div class="form-horizontal col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <hr />
+        <div class="card border-dark mb-3" style="max-width: 35rem;">
+            <div class="card-header text-dark"><h4>Autorizadas</h4></div>
+            <div class="card-body text-dark">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                Operación
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.AuthorizedAuthorizations)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+                                <td>
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-danger" onclick="location.href='@Url.Action("Change-state-admin", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                        <i class="fa fa-edit"></i>
+                                        Cancelar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" title="Ver comisiones" value="Ver comisiones" class="btn btn-outline-dark" onclick="location.href='@Url.Action("overview-state", "Authorization", new { id = "autorizado" })'">
+                <i class="fa fa-table"></i>
+                Ver comisiones
+            </button>
+        </div>
+
+    </div>
+
+    <div class="form-horizontal col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <hr />
+        <div class="card border-dark mb-3" style="max-width: 35rem;">
+            <div class="card-header text-dark"><h4>Ejecutadas</h4></div>
+            <div class="card-body text-dark">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                Operación
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ExecutedAuthorizations)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+                                <td>
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-danger" onclick="location.href='@Url.Action("Change-state-admin", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                        <i class="fa fa-edit"></i>
+                                        Cancelar
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" title="Ver comisiones" value="Ver comisiones" class="btn btn-outline-dark" onclick="location.href='@Url.Action("overview-state", "Authorization", new { id = "ejecutado" })'">
+                <i class="fa fa-table"></i>
+                Ver comisiones
+            </button>
+        </div>
+    </div>
+</div>
+<!--second row end-->
+
+<!--Trird row start-->
+<div class="row">
+    <div class="form-horizontal col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <hr />
+        <div class="card border-dark mb-3" style="max-width: 35rem;">
+            <div class="card-header text-dark"><h4>Finalizadas</h4></div>
+            <div class="card-body text-dark">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                Detalle
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.FinishedAuthorizations)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+                                <td>
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                        <i class="fa fa-edit"></i>
+                                        Detalle
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" title="Ver comisiones" value="Ver comisiones" class="btn btn-outline-dark" onclick="location.href='@Url.Action("overview-state", "Authorization", new { id = "finalizado" })'">
+                <i class="fa fa-table"></i>
+                Ver comisiones
+            </button>
+        </div>
+
+    </div>
+
+    <div class="form-horizontal col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <hr />
+        <div class="card border-dark mb-3" style="max-width: 35rem;">
+            <div class="card-header text-dark"><h4>Rechazadas</h4></div>
+            <div class="card-body text-dark">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                Detalle
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.RejectedAuthorizations)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+                                <td>
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                        <i class="fa fa-edit"></i>
+                                        Detalle
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" title="Ver comisiones" value="Ver comisiones" class="btn btn-outline-dark" onclick="location.href='@Url.Action("overview-state", "Authorization", new { id = "rechazado" })'">
+                <i class="fa fa-table"></i>
+                Ver comisiones
+            </button>
+        </div>
+
+    </div>
+
+    <div class="form-horizontal col-xs-4 col-sm-4 col-md-4 col-lg-4">
+        <hr />
+        <div class="card border-dark mb-3" style="max-width: 35rem;">
+            <div class="card-header text-dark"><h4>Anuladas</h4></div>
+            <div class="card-body text-dark">
+
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                Detalle
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.CanceledAuthorizations)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+                                <td>
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                        <i class="fa fa-edit"></i>
+                                        Detalle
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <button type="button" title="Ver comisiones" value="Ver comisiones" class="btn btn-outline-dark" onclick="location.href='@Url.Action("overview-state", "Authorization", new { id = "anulado" })'">
+                <i class="fa fa-table"></i>
+                Ver comisiones
+            </button>
+        </div>
+    </div>
+</div>
+<!--Trird row end-->
+
+
+<div>
+    <input type="button" class="btn btn-secondary" title="Volver a la lista" value="Volver a la lista" onclick="location.href='@Url.Action("Index", "Contents")'" />
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $(".body-content").addClass("col-xs-11 col-sm-11 col-md-11 col-lg-11")
+
+        $(".main-table").addClass('d-none');
+    });
+
+    function changeview() {
+        $(".main-table").toggleClass('d-none');
+    }
+
+</script>
