@@ -18,7 +18,6 @@ namespace Intranet.Services.Unit
         private GenericRepository<IT_AUTORIZACION> AuthorizationRepository;
         private GenericRepository<IT_AUTORIZACION_MOVIMIENTOS> MovementAuthorizationRepository;
         private GenericRepository<IT_ESTADO_AUTORIZACION> AuthorizationStatusRepository;
-        private GenericRepository<IT_MOTIVO_AUTORIZACION> AuthorizationMotiveRepository;
         private GenericRepository<IT_CONTENIDO_GENERAL_AUDITORIA> ContentAuditoryRepository;
         private GenericRepository<IT_AUTORIZACION_AUDITORIA> AuthorizationAuditoryRepository;
         private SiconGenericRepository<ca_personal> PersonalRepository;
@@ -93,19 +92,6 @@ namespace Intranet.Services.Unit
                     this.AuthorizationStatusRepository = new GenericRepository<IT_ESTADO_AUTORIZACION>(_context);
                 }
                 return AuthorizationStatusRepository;
-            }
-        }
-
-        IRepository<IT_MOTIVO_AUTORIZACION> IUnitOfWork.AuthorizationMotive
-        {
-            get
-            {
-
-                if (this.AuthorizationMotiveRepository == null)
-                {
-                    this.AuthorizationMotiveRepository = new GenericRepository<IT_MOTIVO_AUTORIZACION>(_context);
-                }
-                return AuthorizationMotiveRepository;
             }
         }
 

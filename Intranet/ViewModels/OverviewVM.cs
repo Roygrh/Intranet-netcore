@@ -33,7 +33,5 @@ namespace Intranet.ViewModels
 
         [Display(Name = "Lista de estados")]
         public List<AuthorizationStateVM> LISTA_DE_ESTADOS { get; set; }
-        [Display(Name = "Motivo de salida")]
-        public List<AuthorizationMotiveVM> LISTA_DE_MOTIVOS { get; set; }
     }
 }

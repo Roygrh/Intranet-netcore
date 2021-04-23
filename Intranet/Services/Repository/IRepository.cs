@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace Intranet.Services.Repository
 {
-    interface IRepository<TEntity> where TEntity : class
+    public interface IRepository<TEntity> where TEntity : class
     {
         void Delete(TEntity entityToDelete);
         void Delete(object id);
         IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            int page = 0,
+            int size = -1,
             string includeProperties = "");
         TEntity GetById(object id);
         IEnumerable<TEntity> GetWithRangeSql(string query,

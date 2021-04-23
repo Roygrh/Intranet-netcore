@@ -14,11 +14,9 @@ namespace Intranet.Models
         public decimal AUTORIZACION_AUDITORIA_ID { get; set; }
         [Column(TypeName = "numeric(6,0)")]
         public decimal AUTORIZACION_ID { get; set; }
-        public string USUARIO_CREA { get; set; }
         [Column(TypeName = "numeric(6,0)")]
         public Nullable<decimal> ID_AREA_FUNCIONAL { get; set; }
-        [Column(TypeName = "numeric(6,0)")]
-        public decimal ID_MOTIVO { get; set; }
+        public string MOTIVO { get; set; }
         public string RETORNO { get; set; }
         public Nullable<System.DateTime> HORA_SALIDA { get; set; }
         public Nullable<System.DateTime> HORA_RETORNO { get; set; }
@@ -27,9 +25,6 @@ namespace Intranet.Models
         public string USUARIO_AUTORIZA { get; set; }
         [Column(TypeName = "numeric(6,0)")]
         public Nullable<decimal> ID_TIPO_USUARIO { get; set; }
-        public Nullable<System.DateTime> FECHA_CREACION { get; set; }
-        public Nullable<System.DateTime> FECHA_EDICION { get; set; }
-        public string USUARIO_EDITA { get; set; }
         [Column(TypeName = "numeric(6,0)")]
         public decimal ID_ESTADO { get; set; }
         public string DESCRIPCION { get; set; }
@@ -39,12 +34,11 @@ namespace Intranet.Models
         public string NOMBRE_ARCHIVO { get; set; }
         public string TIPO_CONTENIDO_FILE { get; set; }
         public byte[] FILE { get; set; }
-        [Column(TypeName = "numeric(4,0)")]
-        public Nullable<decimal> USUARIO_INGRESA { get; set; }
-        public Nullable<System.DateTime> FECHA_INGRESA { get; set; }
-        [Column(TypeName = "numeric(4,0)")]
-        public Nullable<decimal> USUARIO_MODIFICA { get; set; }
-        public Nullable<System.DateTime> FECHA_MODIFICA { get; set; }
+        public string USUARIO_CREA { get; set; }
+        public string USARIO_CREA_NOMBRE { get; set; }
+        public Nullable<System.DateTime> FECHA_CREACION { get; set; }
+        public string USUARIO_EDITA { get; set; }
+        public Nullable<System.DateTime> FECHA_EDICION { get; set; }
         public string TIPO_MOVIMIENTO { get; set; }
         public Nullable<System.DateTime> FECHA_MOVIMIENTO { get; set; }
 

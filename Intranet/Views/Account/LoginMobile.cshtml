@@ -1,0 +1,22 @@
+﻿@model Intranet.ViewModels.LoginVM
+
+@{
+    <link href="~/css/login.css" rel="stylesheet" />
+    ViewData["Title"] = "Login de usuario";
+}
+<div class="container-login">
+    <div class="login-div">
+        <form asp-controller="Account" asp-action="Login" method="post">
+            <div class="logo">
+                <img src="~/images/imarpe-logo.png" />
+            </div>
+            <div class="title">Intranet</div>
+            <div class="sub-title">BETA</div>
+            <div class="fields">
+                <div class="username"><input asp-for="Email" type="username" class="user-input" placeholder="username" /></div>
+                <div class="password"><input asp-for="Password" type="password" class="pass-input" placeholder="password" /></div>
+            </div>
+            <button class="signin-button" type="submit">Login</button>
+        </form>
+    </div>
+</div>

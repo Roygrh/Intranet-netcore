@@ -29,7 +29,6 @@ namespace Intranet.Mappings
                 .ForMember(entity => entity.NOMBRE_ARCHIVO, entityVM => entityVM.MapFrom(e => e.FILE.FileName.Split("\\".ToCharArray()).Last()))
                 .ForMember(entity => entity.TIPO_CONTENIDO_FILE, entityVM => entityVM.MapFrom(e => e.FILE.ContentType)); ;
             CreateMap<AuthorizationStateVM, IT_ESTADO_AUTORIZACION>();
-            CreateMap<AuthorizationMotiveVM, IT_MOTIVO_AUTORIZACION>();
             CreateMap<AuthorizationMovementVM, IT_AUTORIZACION_MOVIMIENTOS>();
             CreateMap<PersonalVM, ca_personal>();
             CreateMap<AttendanceVM, intranet_asistencia>();
@@ -46,17 +45,20 @@ namespace Intranet.Mappings
                 .ForMember(entityVM => entityVM.HORA_RETORNO_PROG, entity => entity.MapFrom(e => DataTimeManagement.TimeToString(e.FECHA_RETORNO_PROG)))
                 .ForMember(entityVM => entityVM.AUTHORIZINGUSER, entity => entity.MapFrom(e => user));
             CreateMap<IT_ESTADO_AUTORIZACION, AuthorizationStateVM>();
-            CreateMap<IT_MOTIVO_AUTORIZACION, AuthorizationMotiveVM>();
             CreateMap<IT_AUTORIZACION_MOVIMIENTOS, AuthorizationMovementVM>();
             CreateMap<ca_personal, PersonalVM>();
             CreateMap<intranet_asistencia, AttendanceVM>();
             CreateMap<intranet_vacaciones, VacationVM>();
 
             //Converts for reasons of comfort
+            Nullable<System.DateTime> date = null;
             CreateMap<IT_AUTORIZACION, IT_AUTORIZACION_MOVIMIENTOS>()
             .ForMember(Autho => Autho.ID_AUTORIZACION, Autho => Autho.MapFrom(a => a.AUTORIZACION_ID))
+            .ForMember(AuthoMove => AuthoMove.ID_USUARIO_AUTORIZA, Autho => Autho.MapFrom(a => a.USUARIO_AUTORIZA))
+            .ForMember(AuthoMove => AuthoMove.USUARIO_CREA, Autho => Autho.MapFrom(a => string.Empty))
             .ForMember(AuthoMove => AuthoMove.FECHA_CREACION, Autho => Autho.MapFrom(a => DateTime.Now))
-            .ForMember(AuthoMove => AuthoMove.ID_USUARIO_AUTORIZA, Autho => Autho.MapFrom(a => a.USUARIO_AUTORIZA));
+            .ForMember(AuthoMove => AuthoMove.FECHA_EDICION, Autho => Autho.MapFrom(a => date))
+            .ForMember(AuthoMove => AuthoMove.USUARIO_EDITA, Autho => Autho.MapFrom(a => string.Empty));
             CreateMap<IT_CONTENIDO_GENERAL, IT_CONTENIDO_GENERAL_AUDITORIA>();
             CreateMap<IT_AUTORIZACION, IT_AUTORIZACION_AUDITORIA>();
         }

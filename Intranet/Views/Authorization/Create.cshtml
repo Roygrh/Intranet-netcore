@@ -77,24 +77,14 @@
 
                 <div class="row justify-content-xl-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
                     <div class="form-group">
-                        <label asp-for="LISTA_DE_MOTIVOS" class="control-label col-md-4 font-weight-bold justify-content-xl-start justify-content-sm-start justify-content-md-start justify-content-lg-start"></label>
+                        <label asp-for="MOTIVO" class="control-label col-md-4 font-weight-bold justify-content-xl-start justify-content-sm-start justify-content-md-start justify-content-lg-start"></label>
                         <div class="form-inline input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                             <div class="input-group-prepend">
                                 <span class="input-group-text text-dark"><i class="fa fa-list-ul"></i></span>
                             </div>
-                            &nbsp;&nbsp;&nbsp;
-                            <div class="form-check">
-                                @foreach (var motive in Model.LISTA_DE_MOTIVOS)
-                                {
-                                    <div class="custom-control custom-radio custom-control-inline" onclick="marcar(this)">
-                                        <input type="radio" class="custom-control-input check-button" id="@motive.MOTIVO_ID" name="motives" value="@motive.IsSelected">
-                                        <label class="custom-control-label" for="@motive.MOTIVO_ID">@motive.NOMBRE_MOTIVO.ToLower()</label>
-                                    </div>
-                                }
-                            </div>
+                            <input asp-for="MOTIVO" placeholder = "Ingresa el motivo" class="form-control text-box single-line" data-val="true" id="MOTIVO" name="MOTIVO" type="text" value="">
                             <span class="text-danger font-weight-bold motive-message"></span>
                         </div>
-                        @Html.HiddenFor(model => model.ID_MOTIVO)
                     </div>
                 </div>
 
@@ -122,31 +112,7 @@
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <label asp-for="HORA_SALIDA_PROG" class="control-label col-md-4 font-weight-bold"></label>
-                        <div class="col-md-8 form-inline input-group clockpicker">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text text-dark"><i class="far fa-clock"></i></span>
-                            </div>
-                            <input class="form-control text-box single-line right-format return" id="HORA_SALIDA_PROG" name="HORA_SALIDA_PROG" placeholder="ingrese la hora de salida" type="text" value="@DateTime.Now.ToString("hh:mm tt")">
-                            @Html.ValidationMessageFor(model => model.HORA_SALIDA_PROG, "", new { @class = "text-danger font-weight-bold" })
-                        </div>
-                    </div>
-
-                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <label asp-for="HORA_RETORNO_PROG" class="control-label col-md-4 font-weight-bold"></label>
-                        <div class="col-md-8 form-inline input-group clockpicker">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text text-dark"><i class="far fa-clock"></i></span>
-                            </div>
-                            <input class="form-control text-box single-line right-format return" id="HORA_RETORNO_PROG" name="HORA_RETORNO_PROG" placeholder="ingrese la hora de retorno" type="text" value="">
-                            @Html.ValidationMessageFor(model => model.HORA_RETORNO_PROG, "", new { @class = "text-danger font-weight-bold" })
-                        </div>
-                    </div>
-                </div>
-
-                <!--*****************************************-->
+                
 
                 <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
                     <div class="form-group form-inline col-xs-8 col-sm-8 col-md-8 col-lg-8">
@@ -199,7 +165,6 @@
                     </div>
                 </div>
 
-                <!--*****************************************-->
             </div>
         </div>
     </div>
@@ -251,16 +216,16 @@
 
     function validateMotives() {
         let result = false;
-        $('.check-button').each(function () {
-            if (this.checked) {
-                result = this.checked;
+        $('#MOTIVO').each(function () {
+            if (this.value.length > 0) {
+                result = true;
             }
         });
 
         if (result)
             $('.motive-message').text("");
         else
-            $('.motive-message').text("*")
+            $('.motive-message').text("* Ingresar motivo")
 
         return result;
     }
@@ -323,7 +288,7 @@
         });
 
         $("#FECHA_SALIDA_PROG").change(function () {
-            let date = moment(this.value, "DD/MM/YYYY").add(1, 'day');
+            let date = moment(this.value, "DD/MM/YYYY");
             $("#FECHA_RETORNO_PROG").val(date.format("DD/MM/YYYY"));
         });
 

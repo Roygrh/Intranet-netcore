@@ -22,6 +22,8 @@ namespace Intranet.Services.Repository
         public virtual IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            int page = 0,
+            int size = -1,
             string includeProperties = "")
         {
             IQueryable<TEntity> query = dbSet;

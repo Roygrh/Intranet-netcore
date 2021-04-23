@@ -5,16 +5,20 @@ using Intranet.Services.DateTimeManagement;
 using Intranet.Services.FileConverter;
 using Intranet.Services.Unit;
 using Intranet.ViewModels;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Intranet.Controllers
 {
+    [Authorize]
     public class AuthorizationController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -23,7 +27,7 @@ namespace Intranet.Controllers
         private readonly DataTimeManagement _dateTimeManagement;
         // GET: AuthorizationController
 
-        public AuthorizationController(IMapper mapper, UnitOfWork unitOfWork, AuthorizationStateManagement authorizationStateManagement, DataTimeManagement dateTimeManagement)
+        public AuthorizationController(IMapper mapper, IUnitOfWork unitOfWork, AuthorizationStateManagement authorizationStateManagement, DataTimeManagement dateTimeManagement)
         {
             this._mapper = mapper;
             this._unitOfWork = unitOfWork;
@@ -33,14 +37,22 @@ namespace Intranet.Controllers
 
         public ActionResult Index()
         {
+            var user = HttpContext.User;
+            var b = user.Claims;
+            var c = user.Identities;
+            var d = user.Identity;
+            //var e = HttpContext.Session;
+            var f = user.FindFirst("UserName");
+            var g = user.FindFirst(ClaimTypes.Email);
+            var h = user.FindFirst(ClaimTypes.Name);
+            HttpContext.SignOutAsync();
+            var tmp = this._authorizationStateManagement.GetAuthorizationPaging(DateTime.Now.AddDays(-5), DateTime.Now, "", 1, 5);
             List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(a => a.USUARIO_CREA.Equals("01844800")).ToList());
             var authorizationtmp = this._unitOfWork.Authorizations.Get().First();
             var states = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
-            List<AuthorizationMotiveVM> motives = this._mapper.Map<List<AuthorizationMotiveVM>>(this._unitOfWork.AuthorizationMotive.Get().ToList());
 
             foreach (var authorization in authorizations)
             {
-                authorization.MOTIVO = motives.Where(m => m.MOTIVO_ID == authorization.ID_MOTIVO).First();
                 authorization.ESTADO = states.Find(s => s.ESTADO_ID == authorization.ID_ESTADO);
             }
 
@@ -49,21 +61,21 @@ namespace Intranet.Controllers
 
         public ActionResult Overview()
         {
-            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-50), DateTime.Now);
+            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-5), DateTime.Now);
             overview.Authorization = new AuthorizationVM();
             return View(overview);
         }
 
         public ActionResult Watchview()
         {
-            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-50), DateTime.Now);
+            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-5), DateTime.Now);
             overview.Authorization = new AuthorizationVM();
             return View(overview);
         }
 
         public ActionResult HRview()
         {
-            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-50), DateTime.Now);
+            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-5), DateTime.Now);
             overview.Authorization = new AuthorizationVM();
             return View(overview);
         }
@@ -71,7 +83,7 @@ namespace Intranet.Controllers
         // GET: AuthorizationController/Details/5
         public ActionResult Details(decimal id)
         {
-            this._authorizationStateManagement.SelectAuthorization(id).IncludeMotivesListAndStatesList().IncludeOwnMovementsListAndStatesList();
+            this._authorizationStateManagement.SelectAuthorization(id).IncludeStatesList().IncludeOwnMovementsListAndStatesList();
             return View(this._authorizationStateManagement.Authorization);
         }
 
@@ -114,7 +126,6 @@ namespace Intranet.Controllers
             try
             {
                 var authorization = this._unitOfWork.Authorizations.GetById(id);
-                authorization.ID_MOTIVO = Authorization.ID_MOTIVO;
                 authorization.FECHA_SALIDA_PROG = this._dateTimeManagement.StringToDateTime(Authorization.FECHA_SALIDA_PROG + " " + Authorization.HORA_SALIDA_PROG);
                 authorization.FECHA_RETORNO_PROG = this._dateTimeManagement.StringToDateTime(Authorization.FECHA_RETORNO_PROG + " " + Authorization.HORA_RETORNO_PROG);
                 authorization.RETORNO = Authorization.RETORNO;

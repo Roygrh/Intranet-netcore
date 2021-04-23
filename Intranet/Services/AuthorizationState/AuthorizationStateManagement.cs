@@ -15,7 +15,7 @@ namespace Intranet.Services.AuthorizationState
         private IUnitOfWork _unitOfWork;
         private IT_AUTORIZACION _authorization;
         private IMapper _mapper;
-        public AuthorizationStateManagement(IMapper mapper, UnitOfWork unitOfWork)
+        public AuthorizationStateManagement(IMapper mapper, IUnitOfWork unitOfWork)
         {
             this._mapper = mapper;
             this._unitOfWork = unitOfWork;
@@ -25,12 +25,26 @@ namespace Intranet.Services.AuthorizationState
         {
             var authorization = new AuthorizationVM();
             authorization.LISTA_DE_ESTADOS = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
-            authorization.LISTA_DE_MOTIVOS = this._mapper.Map<List<AuthorizationMotiveVM>>(this._unitOfWork.AuthorizationMotive.Get().ToList());
             authorization.ESTADO = new AuthorizationStateVM();
             authorization.ESTADO.NOMBRE_ESTADO = "SIN SOLICITAR";
             authorization.RETORNO = "SI";
             var movements = this._unitOfWork.MovementAuthorizations.Get().ToList();
             return authorization;
+        }
+        public List<AuthorizationVM> GetAuthorizationPaging(DateTime? start, DateTime? end, string phrase = "", int page = 0, int size = -1) 
+        {
+            var users = this._mapper.Map<List<PersonalVM>>(this._unitOfWork.PersonalRepository.Get( p => p.cod_personal.Contains(phrase) || p.nombre.Contains(phrase)).ToList());
+            var userIds = users.Select(p => p.cod_personal).ToList();
+
+            var authos = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(
+                a => userIds.Contains(a.USUARIO_CREA) && start.Value <= a.FECHA_CREACION.Value && a.FECHA_CREACION.Value <= end.Value,
+                q => q.OrderByDescending(au => au.FECHA_CREACION),
+                page, size));
+
+            authos.ForEach(a => {
+                a.OWNERUSER = users.Find(u => u.cod_personal.Trim().Equals(a.USUARIO_CREA));
+            });
+            return authos;
         }
 
         public OverviewVM GetOverviewListbyUserforStates(DateTime? start, DateTime? end, string userId = null)
@@ -76,7 +90,6 @@ namespace Intranet.Services.AuthorizationState
                 overview.CanceledAuthorizations = authorizations.Where(a => a.ID_ESTADO == canceledId).ToList();
 
                 overview.LISTA_DE_ESTADOS = this._mapper.Map<List<AuthorizationStateVM>>(states);
-                overview.LISTA_DE_MOTIVOS = this._mapper.Map<List<AuthorizationMotiveVM>>(this._unitOfWork.AuthorizationMotive.Get().ToList());
             }
             return overview;
         }
@@ -85,7 +98,6 @@ namespace Intranet.Services.AuthorizationState
         {
             this._authorization = this._unitOfWork.Authorizations.GetById(id);
             this.Authorization = this._mapper.Map<AuthorizationVM>(this._authorization);
-            this.Authorization.LISTA_DE_MOTIVOS = this._mapper.Map<List<AuthorizationMotiveVM>>(this._unitOfWork.AuthorizationMotive.Get().ToList());
             this.Authorization.LISTA_DE_ESTADOS = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
             this.Authorization.LISTA_DE_MOVIMIENTOS = this._mapper.Map<List<AuthorizationMovementVM>>(this._unitOfWork.MovementAuthorizations.Get(m => m.ID_AUTORIZACION == id).ToList());
             this.Authorization.ESTADO = this.Authorization.LISTA_DE_ESTADOS.Find(s => s.ESTADO_ID.Equals(this.Authorization.ID_ESTADO));
@@ -120,9 +132,8 @@ namespace Intranet.Services.AuthorizationState
             this.Authorization = this._mapper.Map<AuthorizationVM>(this._authorization);
         }
 
-        public AuthorizationStateManagement IncludeMotivesListAndStatesList()
+        public AuthorizationStateManagement IncludeStatesList()
         {
-            this.Authorization.LISTA_DE_MOTIVOS = this._mapper.Map<List<AuthorizationMotiveVM>>(this._unitOfWork.AuthorizationMotive.Get().ToList());
             this.Authorization.LISTA_DE_ESTADOS = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
             return this;
         }
@@ -184,7 +195,7 @@ namespace Intranet.Services.AuthorizationState
                 this._authorization = this._mapper.Map<IT_AUTORIZACION>(this.Authorization);
                 this._authorization.ID_ESTADO = state.ESTADO_ID;
                 this._authorization.FECHA_CREACION = this._authorization.FECHA_ULTIMO_ESTADO = DateTime.Now;
-                if(string.IsNullOrEmpty(this.Authorization.FECHA_RETORNO_PROG) || string.IsNullOrEmpty(this.Authorization.HORA_RETORNO_PROG)) this._authorization.RETORNO = "NO";
+                if(string.IsNullOrEmpty(this.Authorization.FECHA_RETORNO_PROG)) this._authorization.RETORNO = "NO";
                 this._unitOfWork.Authorizations.Add(this._authorization);
                 this._unitOfWork.Commit();
                 var nuevo = this._unitOfWork.Authorizations.Get().ToList();
@@ -205,7 +216,7 @@ namespace Intranet.Services.AuthorizationState
                 this._authorization.ID_ESTADO = state.ESTADO_ID;
                 this._authorization.FECHA_ULTIMO_ESTADO = DateTime.Now;
                 if (state.NOMBRE_ESTADO.Trim().ToLower().Equals("autorizado"))
-                    this._authorization.USUARIO_AUTORIZA = "PES-002345";
+                    this._authorization.USUARIO_AUTORIZA = "08887865";
                 this._unitOfWork.Authorizations.Update(this._authorization);
             }
 

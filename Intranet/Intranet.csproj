@@ -15,7 +15,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
     <PackageReference Include="Moment.js" Version="2.29.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Business logic objects\" />
+    <Folder Include="wwwroot\images\" />
   </ItemGroup>
 
 </Project>

@@ -1,10 +1,13 @@
 using Intranet.Data;
 using Intranet.Services.AuthorizationState;
 using Intranet.Services.DateTimeManagement;
+using Intranet.Services.Ldap;
 using Intranet.Services.Unit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +31,15 @@ namespace Intranet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config =>
+                {
+                    config.Cookie.Name = "User.Cookie";
+                    config.LoginPath = "/Account/Login";
+                });
+
+            services.Configure<LdapConfig>(Configuration.GetSection("Ldap"));
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -36,10 +48,18 @@ namespace Intranet
             services.AddDbContext<ApplicationSiconDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("SiconConnection")));
 
+
             services.AddControllersWithViews();
-            services.AddTransient<UnitOfWork>();
+            services.AddRazorPages();
+            services.AddScoped<IAuthenticationService, LdapAuthenticationService>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<AuthorizationStateManagement>();
             services.AddTransient<DataTimeManagement>();
+
+            /*services.AddMvcCore(options => {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            }).AddXmlSerializerFormatters();*/
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -59,6 +79,8 @@ namespace Intranet
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

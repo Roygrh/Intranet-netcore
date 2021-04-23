@@ -111,24 +111,14 @@ else
 
             <div class="row justify-content-xl-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.LISTA_DE_MOTIVOS, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold justify-content-xl-start justify-content-sm-start justify-content-md-start justify-content-lg-start" })
+                    <label asp-for="MOTIVO" class="control-label col-md-4 font-weight-bold justify-content-xl-start justify-content-sm-start justify-content-md-start justify-content-lg-start"></label>
                     <div class="form-inline input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="input-group-prepend">
                             <span class="input-group-text text-dark"><i class="fa fa-list-ul"></i></span>
                         </div>
-                        &nbsp;&nbsp;&nbsp;
-                        <div class="form-check">
-                            @foreach (var motive in Model.LISTA_DE_MOTIVOS)
-                            {
-                                <div class="custom-control custom-radio custom-control-inline">
-                                    <input type="radio" class="custom-control-input check-button" id="@motive.MOTIVO_ID" name="motives" value="@motive.IsSelected" checked=@(Model.ID_MOTIVO == motive.MOTIVO_ID) disabled>
-                                    <label class="custom-control-label" for="@motive.MOTIVO_ID">@motive.NOMBRE_MOTIVO.ToLower()</label>
-                                </div>
-                            }
-                        </div>
+                        <input asp-for="MOTIVO" class="form-control text-box single-line" data-val="true" id="MOTIVO" name="MOTIVO" type="text" value="">
                         <span class="text-danger font-weight-bold motive-message"></span>
                     </div>
-                    @Html.HiddenFor(model => model.ID_MOTIVO)
                 </div>
             </div>
 
@@ -154,36 +144,8 @@ else
                             <input class="form-control return text-box single-line" id="FECHA_RETORNO_PROG" name="FECHA_RETORNO_PROG" type="text" value="" disabled>
                         }
                         else
+                        {
                             @Html.EditorFor(model => model.FECHA_RETORNO_PROG, new { htmlAttributes = new { @class = "form-control return", @disabled = "disabled" } })
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    @Html.LabelFor(model => model.HORA_SALIDA_PROG, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
-                    <div class="col-md-8 form-inline input-group clockpicker">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        <input class="form-control text-box single-line right-format return" id="HORA_SALIDA_PROG" name="HORA_SALIDA_PROG" placeholder="ingrese la hora de salida" type="text" value="@Model.HORA_SALIDA_PROG" disabled>
-                    </div>
-                </div>
-
-                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    @Html.LabelFor(model => model.HORA_RETORNO_PROG, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
-                    <div class="col-md-8 form-inline input-group clockpicker">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        @if (Model.RETORNO.Equals("NO"))
-                        {
-                            <input class="form-control text-box single-line" id="HORA_RETORNO_PROG" type="text" value="@Model.HORA_RETORNO_PROG" disabled>
-                        }
-                        else
-                        {
-                            <input class="form-control text-box single-line" id="HORA_RETORNO_PROG" name="HORA_RETORNO_PROG" placeholder="ingrese la hora de retorno" type="text" value="@Model.HORA_RETORNO_PROG" disabled>
                         }
                     </div>
                 </div>
@@ -198,11 +160,11 @@ else
                         <input type="checkbox" class="custom-control-input" id="customSwitches" checked=@Model.RETORNO.Equals("NO") disabled>
                         @if (@Model.RETORNO.Equals("NO"))
                         {
-                            <label class="custom-control-label" for="customSwitches">Sin hora de retorno</label>
+                            <label class="custom-control-label" for="customSwitches">Sin retorno</label>
                         }
                         else
                         {
-                            <label class="custom-control-label" for="customSwitches">Con hora de retorno</label>
+                            <label class="custom-control-label" for="customSwitches">Con retorno</label>
                         }
                     </div>
                     @Html.HiddenFor(model => model.RETORNO, new { @Value = Model.RETORNO })

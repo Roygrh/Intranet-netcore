@@ -13,11 +13,9 @@ namespace Intranet.Models
         [Column("ESTADO_ID", TypeName = "numeric(6,0)")]
         public decimal ESTADO_ID { get; set; }
         public string NOMBRE_ESTADO { get; set; }
-        [Column(TypeName = "numeric(4,0)")]
-        public Nullable<decimal> USUARIO_INGRESA { get; set; }
-        public Nullable<System.DateTime> FECHA_INGRESA { get; set; }
-        [Column(TypeName = "numeric(4,0)")]
-        public Nullable<decimal> USUARIO_MODIFICA { get; set; }
-        public Nullable<System.DateTime> FECHA_MODIFICA { get; set; }
+        public string USUARIO_CREA { get; set; }
+        public Nullable<System.DateTime> FECHA_CREACION { get; set; }
+        public string USUARIO_EDITA { get; set; }
+        public Nullable<System.DateTime> FECHA_EDICION { get; set; }
     }
 }

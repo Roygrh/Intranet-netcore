@@ -12,7 +12,7 @@ namespace Intranet.ViewModels
         public decimal ID_ESTADO { get; set; }
         public string USUARIO_CREA { get; set; }
         public DateTime FECHA_CREACION { get; set; }
-        public decimal ID_MOTIVO { get; set; }
+        public string MOTIVO { get; set; }
         public decimal ID_AREA_FUNCIONAL { get; set; }
         public string ID_USUARIO_AUTORIZA { get; set; }
         public decimal ID_TIPO_USUARIO { get; set; }

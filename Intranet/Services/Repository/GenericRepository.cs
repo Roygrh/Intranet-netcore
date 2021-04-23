@@ -22,6 +22,8 @@ namespace Intranet.Services.Repository
         public virtual IEnumerable<TEntity> Get(
             Expression<Func<TEntity, bool>> filter = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            int page = 0,
+            int size = -1,
             string includeProperties = "")
         {
             IQueryable<TEntity> query = dbSet;
@@ -39,7 +41,10 @@ namespace Intranet.Services.Repository
 
             if (orderBy != null)
             {
-                return orderBy(query).ToList();
+                if(page > 0 && size >= 0)
+                    return orderBy(query).Skip((page - 1) * size).Take(size).ToList();
+                else
+                    return orderBy(query).ToList();
             }
             else
             {
@@ -81,6 +86,12 @@ namespace Intranet.Services.Repository
         {
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+
+        public virtual TEntity Procedure(int days)
+        {
+            var result = dbSet.FromSqlRaw<TEntity>("").ToList().First();
+            return result;
         }
     }
 }

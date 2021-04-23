@@ -31,7 +31,7 @@
                             <label asp-for="Authorization.ESTADO" class="control-label font-weight-bold"></label>
                         </th>
                         <th>
-                            <label asp-for="Authorization.ID_MOTIVO" class="control-label font-weight-bold"></label>
+                            <label asp-for="Authorization.MOTIVO" class="control-label font-weight-bold"></label>
                         </th>
                         <th>
                             <label asp-for="Authorization.RETORNO" class="control-label font-weight-bold"></label>
@@ -58,7 +58,7 @@
                                 @Html.DisplayFor(modelItem => modelItem.LISTA_DE_ESTADOS.Find(m => m.ESTADO_ID.Equals(item.ID_ESTADO)).NOMBRE_ESTADO, new { htmlAttributes = new { @class = "form-control" } })
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => modelItem.LISTA_DE_MOTIVOS.Find(m => m.MOTIVO_ID.Equals(item.ID_MOTIVO)).NOMBRE_MOTIVO, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.DisplayFor(modelItem => item.MOTIVO, new { htmlAttributes = new { @class = "form-control" } })
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.RETORNO, new { htmlAttributes = new { @class = "form-control" } })
@@ -91,7 +91,7 @@
 
 <!--second row start-->
 
-<div class="row">
+<div class="row second-row">
     <div class="form-horizontal col-xs-4 col-sm-4 col-md-4 col-lg-4">
         <hr />
         <div class="card border-dark mb-3" style="max-width: 35rem;">
@@ -172,7 +172,7 @@
                                     @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
                                 </td>
                                 <td>
-                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Change-state-hr", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Change-state-hr", "Authorization", new { id = item.AUTORIZACION_ID })'">
                                         <i class="fa fa-edit"></i>
                                         Operar
                                     </button>
@@ -221,7 +221,7 @@
                                     @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
                                 </td>
                                 <td>
-                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Change-state-hr", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Change-state-hr", "Authorization", new { id = item.AUTORIZACION_ID })'">
                                         <i class="fa fa-edit"></i>
                                         Operar
                                     </button>
@@ -240,7 +240,7 @@
 </div>
 <!--second row end-->
 <!--Trird row start-->
-<div class="row">
+<div class="row third-row">
     <div class="form-horizontal col-xs-4 col-sm-4 col-md-4 col-lg-4">
         <hr />
         <div class="card border-dark mb-3" style="max-width: 35rem;">
@@ -404,6 +404,16 @@
 
     function changeview() {
         $(".main-table").toggleClass('d-none');
+        let secondRow = $(".second-row").attr('class');
+        let thirdRow = $(".third-row").attr('class');
+        if (secondRow && thirdRow) {
+            $(".second-row").toggleClass('d-none');
+            $(".third-row").toggleClass('d-none');
+        }
+        else {
+            $(".second-row").addClass('d-none');
+            $(".third-row").addClass('d-none');
+        }
     }
 
 </script>

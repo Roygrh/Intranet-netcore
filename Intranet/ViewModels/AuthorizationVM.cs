@@ -12,9 +12,11 @@ namespace Intranet.ViewModels
         public decimal AUTORIZACION_ID { get; set; }
         [Display(Name = "N° Formato")]
         public string USUARIO_CREA { get; set; }
+        [Display(Name = "Nombre")]
+        public string USARIO_CREA_NOMBRE { get; set; }
         public decimal ID_AREA_FUNCIONAL { get; set; }
         [Display(Name = "Motivo")]
-        public decimal ID_MOTIVO { get; set; }
+        public string MOTIVO { get; set; }
         [Display(Name = "Retorno")]
         public string RETORNO { get; set; }
         public Nullable<DateTime> FECHA_SALIDA_PROG_DATE_TIME { get; set; }
@@ -55,15 +57,11 @@ namespace Intranet.ViewModels
         public PersonalVM AUTHORIZINGUSER { get; set; }
         [Display(Name = "Estado")]
         public AuthorizationStateVM ESTADO { get; set; }
-        [Display(Name = "Motivo")]
-        public AuthorizationMotiveVM MOTIVO { get; set; }
         [Display(Name = "Lista de estados")]
         public List<AuthorizationStateVM> LISTA_DE_ESTADOS { get; set; }
         [Display(Name = "Lista de estados")]
         public List<AuthorizationStateVM> LISTA_DE_ESTADOS_PROPIO { get; set; }
         [Display(Name = "Lista de movimientos")]
         public List<AuthorizationMovementVM> LISTA_DE_MOVIMIENTOS { get; set; }
-        [Display(Name = "Motivo de salida")]
-        public List<AuthorizationMotiveVM> LISTA_DE_MOTIVOS { get; set; }
     }
 }

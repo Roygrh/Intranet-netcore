@@ -17,7 +17,6 @@ namespace Intranet.Data
         public DbSet<IT_CONTENIDO_GENERAL> IT_CONTENIDO_GENERAL { get; set; }
         public DbSet<IT_TIPO_CONTENIDO> IT_TIPO_CONTENIDO { get; set; }
         public DbSet<IT_AUTORIZACION> IT_AUTORIZACION { get; set; }
-        public DbSet<IT_MOTIVO_AUTORIZACION> IT_MOTIVO_AUTORIZACION { get; set; }
         public DbSet<IT_ESTADO_AUTORIZACION> IT_ESTADO_AUTORIZACION { get; set; }
         public DbSet<IT_AUTORIZACION_MOVIMIENTOS> IT_AUTORIZACION_MOVIMIENTOS { get; set; }
         public DbSet<IT_CONTENIDO_GENERAL_AUDITORIA> IT_CONTENIDO_GENERAL_AUDITORIA { get; set; }
