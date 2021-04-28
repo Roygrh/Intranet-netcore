@@ -46,6 +46,7 @@ namespace Intranet.Controllers
             var g = user.FindFirst(ClaimTypes.Email);
             var h = user.FindFirst(ClaimTypes.Name);
             HttpContext.SignOutAsync();
+
             var tmp = this._authorizationStateManagement.GetAuthorizationPaging(DateTime.Now.AddDays(-5), DateTime.Now, "", 1, 5);
             List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(a => a.USUARIO_CREA.Equals("01844800")).ToList());
             var authorizationtmp = this._unitOfWork.Authorizations.Get().First();

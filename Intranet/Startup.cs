@@ -52,9 +52,9 @@ namespace Intranet
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<IAuthenticationService, LdapAuthenticationService>();
-            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            /*services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<AuthorizationStateManagement>();
-            services.AddTransient<DataTimeManagement>();
+            services.AddTransient<DataTimeManagement>();*/
 
             /*services.AddMvcCore(options => {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
