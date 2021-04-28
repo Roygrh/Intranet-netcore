@@ -32,10 +32,12 @@ namespace Intranet.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM login)
         {
+            login.UserName = login.Email;
+            login.Email = "jquiroz@imarpe.gob.pe";
+            login.Password = "Imarpe2021$";
             var usern = this._authService.Login(login.UserName, login.Password);
             var user = new User();
             user.DisplayName = "Jorge Enrique Quiroz Ñato";
-            login.UserName = "jquiroz";
             if (null != user)
             {
                 // create your login token here

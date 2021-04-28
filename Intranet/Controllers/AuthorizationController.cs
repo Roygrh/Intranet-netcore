@@ -37,7 +37,7 @@ namespace Intranet.Controllers
 
         public ActionResult Index()
         {
-            var user = HttpContext.User;
+            /*var user = HttpContext.User;
             var b = user.Claims;
             var c = user.Identities;
             var d = user.Identity;
@@ -45,8 +45,8 @@ namespace Intranet.Controllers
             var f = user.FindFirst("UserName");
             var g = user.FindFirst(ClaimTypes.Email);
             var h = user.FindFirst(ClaimTypes.Name);
-            HttpContext.SignOutAsync();
-            var tmp = this._authorizationStateManagement.GetAuthorizationPaging(DateTime.Now.AddDays(-5), DateTime.Now, "", 1, 5);
+            HttpContext.SignOutAsync();*/
+            var tmp = this._authorizationStateManagement.GetAuthorizationPaging(DateTime.Now.AddDays(-15), DateTime.Now, "", 1, 5);
             List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(a => a.USUARIO_CREA.Equals("01844800")).ToList());
             var authorizationtmp = this._unitOfWork.Authorizations.Get().First();
             var states = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
