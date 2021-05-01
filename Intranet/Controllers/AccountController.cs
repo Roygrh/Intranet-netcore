@@ -35,8 +35,8 @@ namespace Intranet.Controllers
             login.UserName = login.Email;
             login.Email = "jquiroz@imarpe.gob.pe";
             login.Password = "Imarpe2021$";
-            var usern = this._authService.Login(login.UserName, login.Password);
-            var user = new User();
+            var user = this._authService.Login(login.UserName, login.Password);
+            user = new User();
             user.DisplayName = "Jorge Enrique Quiroz Ñato";
             if (null != user)
             {
@@ -45,7 +45,8 @@ namespace Intranet.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.DisplayName),
                     new Claim(ClaimTypes.Email, login.Email),
-                    new Claim("UserName",login.UserName)
+                    new Claim("UserName",user.UserName),
+                    new Claim("DNI", user.DNI)
                 };
 
                 var licenseClaims = new List<Claim>()

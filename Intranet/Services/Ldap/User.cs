@@ -9,5 +9,6 @@ namespace Intranet.Services.Ldap
     {
         public string UserName { get; set; }
         public string DisplayName { get; set; }
+        public string DNI { get; set; }
     }
 }

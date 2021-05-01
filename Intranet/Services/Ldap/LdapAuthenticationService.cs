@@ -11,6 +11,7 @@ namespace Intranet.Services.Ldap
     {
         private const string DisplayNameAttribute = "DisplayName";
         private const string SAMAccountNameAttribute = "SAMAccountName";
+        private const string DNI = "DNI";
 
         private readonly LdapConfig config;
 
@@ -29,16 +30,19 @@ namespace Intranet.Services.Ldap
                         searcher.Filter = String.Format("({0}={1})", SAMAccountNameAttribute, userName);
                         searcher.PropertiesToLoad.Add(DisplayNameAttribute);
                         searcher.PropertiesToLoad.Add(SAMAccountNameAttribute);
+                        searcher.PropertiesToLoad.Add(DNI);
                         var result = searcher.FindOne();
                         if (result != null)
                         {
                             var displayName = result.Properties[DisplayNameAttribute];
                             var samAccountName = result.Properties[SAMAccountNameAttribute];
+                            var dni = result.Properties[DNI];
 
                             return new User
                             {
                                 DisplayName = displayName == null || displayName.Count <= 0 ? null : displayName[0].ToString(),
-                                UserName = samAccountName == null || samAccountName.Count <= 0 ? null : samAccountName[0].ToString()
+                                UserName = samAccountName == null || samAccountName.Count <= 0 ? null : samAccountName[0].ToString(),
+                                DNI = dni == null || dni.Count <= 0 ? null : dni[0].ToString()
                             };
                         }
                     }
