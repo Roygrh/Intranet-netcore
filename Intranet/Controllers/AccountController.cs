@@ -43,7 +43,8 @@ namespace Intranet.Controllers
                 {
                     new Claim(ClaimTypes.Name, user.DisplayName),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim("UserName",user.UserName)
+                    new Claim("UserName",user.UserName),
+                    new Claim("DNI", user.DNI)
                 };
 
                 var licenseClaims = new List<Claim>()
