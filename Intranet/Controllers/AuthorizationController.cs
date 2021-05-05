@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Intranet.Controllers
 {
@@ -25,27 +24,30 @@ namespace Intranet.Controllers
         private readonly IMapper _mapper;
         private readonly AuthorizationStateManagement _authorizationStateManagement;
         private readonly DataTimeManagement _dateTimeManagement;
+        private readonly ApplicationDbContext _context;
         // GET: AuthorizationController
 
-        public AuthorizationController(IMapper mapper, IUnitOfWork unitOfWork, AuthorizationStateManagement authorizationStateManagement, DataTimeManagement dateTimeManagement)
+        public AuthorizationController(IMapper mapper, IUnitOfWork unitOfWork, 
+            AuthorizationStateManagement authorizationStateManagement, 
+            DataTimeManagement dateTimeManagement, ApplicationDbContext context)
         {
             this._mapper = mapper;
             this._unitOfWork = unitOfWork;
             this._authorizationStateManagement = authorizationStateManagement;
             this._dateTimeManagement = dateTimeManagement;
+            this._context = context;
         }
 
         public ActionResult Index()
         {
-            /*var user = HttpContext.User;
+            var user = HttpContext.User;
             var b = user.Claims;
             var c = user.Identities;
             var d = user.Identity;
             //var e = HttpContext.Session;
-            var f = user.FindFirst("UserName");
+            var f = user.FindFirstValue("UserName");
             var g = user.FindFirst(ClaimTypes.Email);
             var h = user.FindFirst(ClaimTypes.Name);
-            HttpContext.SignOutAsync();*/
             var tmp = this._authorizationStateManagement.GetAuthorizationPaging(DateTime.Now.AddDays(-15), DateTime.Now, "", 1, 5);
             List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(a => a.USUARIO_CREA.Equals("01844800")).ToList());
             var authorizationtmp = this._unitOfWork.Authorizations.Get().First();

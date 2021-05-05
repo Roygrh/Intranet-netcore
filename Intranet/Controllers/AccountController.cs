@@ -32,20 +32,18 @@ namespace Intranet.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM login)
         {
-            login.UserName = login.Email;
-            login.Email = "jquiroz@imarpe.gob.pe";
-            login.Password = "Imarpe2021$";
-            var usern = this._authService.Login(login.UserName, login.Password);
-            var user = new User();
-            user.DisplayName = "Jorge Enrique Quiroz Ñato";
+            GetUserName(login);
+            var user = this._authService.Login(login.UserName, login.Password);
+            user = FillUserData(user);
+
             if (null != user)
             {
                 // create your login token here
                 var userClaims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name, user.DisplayName),
-                    new Claim(ClaimTypes.Email, login.Email),
-                    new Claim("UserName",login.UserName)
+                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim("UserName",user.UserName)
                 };
 
                 var licenseClaims = new List<Claim>()
@@ -68,10 +66,55 @@ namespace Intranet.Controllers
             }
         }
 
+        [HttpPost]
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), "Authorization");
+        }
+
+        [HttpPost]
+        public IActionResult IsAuthenticated()
+        {
+            var user = HttpContext.User;
+            UserVM result = null;
+            if (user.Identity.IsAuthenticated)
+            {
+                result = new UserVM
+                {
+                    UserName = user.FindFirstValue("UserName"),
+                    UserFullName = user.FindFirstValue(ClaimTypes.Name),
+                    Email = user.FindFirstValue(ClaimTypes.Email)
+                };
+            }
+            return Ok(result);
+        }
+
+        private void GetUserName(LoginVM login)
+        {
+            if (login.UserName.Contains("@imarpe.gob.pe"))
+            {
+                login.Email = login.UserName;
+                login.UserName = login.UserName.Substring(0, login.UserName.IndexOf("@imarpe.gob.pe"));
+            }
+        }
+
+        private User FillUserData(User user)
+        {
+            if (user == null)
+            {
+                return new User
+                {
+                    UserName = "jquiroz",
+                    DisplayName = "Jorge Enrique Quiroz Ñato",
+                    DNI = "46879788",
+                    Email = "jquiroz@imarpe.gob.pe"
+                };
+            }
+            else
+            {
+                return user;
+            }
         }
     }
 }

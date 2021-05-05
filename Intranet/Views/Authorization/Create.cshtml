@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Create";
+    var functionalAreas = new SelectList(Model.LISTA_AREAS_FUNCIONALES, "AREA_FUNCIONAL_ID", "NOMBRE_AREA_FUNCIONAL");
 }
 
 <h1>Solicitar una papeleta</h1>
@@ -40,17 +41,18 @@
                     </div>
 
                     <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                        <label asp-for="UNIDAD_ORGANICA" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <label asp-for="NOMBRE_AREA_FUNCIONAL" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
                         <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
                             <div class="input-group-prepend">
                                 <span class="input-group-text text-dark"><i class="fas fa-warehouse"></i></span>
                             </div>
-                            <input asp-for="UNIDAD_ORGANICA" class="form-control" disabled="disabled" />
+                            <select asp-for="ID_AREA_FUNCIONAL" class="form-control" id="Areas"
+                                    asp-items="@functionalAreas"></select>
                             @Html.HiddenFor(model => model.ID_AREA_FUNCIONAL)
                             @Html.HiddenFor(model => model.ID_TIPO_USUARIO)
                         </div>
+                        <span asp-validation-for="ID_AREA_FUNCIONAL" class="text-danger font-weight-bold areas-message text-right"></span>
                     </div>
-
                 </div>
 
                 <div class="row">
@@ -82,9 +84,9 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text text-dark"><i class="fa fa-list-ul"></i></span>
                             </div>
-                            <input asp-for="MOTIVO" placeholder = "Ingresa el motivo" class="form-control text-box single-line" data-val="true" id="MOTIVO" name="MOTIVO" type="text" value="">
-                            <span class="text-danger font-weight-bold motive-message"></span>
+                            <input asp-for="MOTIVO" placeholder="Ingresa el motivo" class="form-control text-box single-line" data-val="true" id="MOTIVO" name="MOTIVO" type="text" value="">
                         </div>
+                        <span class="text-danger font-weight-bold motive-message"></span>
                     </div>
                 </div>
 
@@ -191,6 +193,14 @@
         $('#ID_MOTIVO').val(value.firstElementChild.id);
     }
 
+    function validateFunctionalAreas() {
+        let result = parseInt(document.getElementById("Areas").value);
+        if (result <= 0) {
+            $('.areas-message').text("* Seleccinar área")
+        }
+        return result > 0;
+    }
+
     function validateDate(dateLabel) {
         var span = $("#" + dateLabel.id).next();
         let flag = validateDateFormat(dateLabel.value);
@@ -246,7 +256,6 @@
     }
 
     function validateDateAndTimeOfReturn() {
-        debugger;
         let result = true;
         let isChecked = $('#customSwitches').prop('checked');
         if (!isChecked) {
@@ -266,7 +275,9 @@
     function validateDateAndTime() {
         let result = true;
 
-        result = validateDateAndTimeOfDeparture();
+        result = validateFunctionalAreas();
+
+        result = validateDateAndTimeOfDeparture() && result;
 
         result = validateDateAndTimeOfReturn() && result;
 
@@ -279,6 +290,10 @@
     }
 
     $(document).ready(function () {
+
+        var children = $('#Areas').children('option').removeAttr("selected");
+        children.first().attr("selected", "selected");
+        children.first().attr("disabled", "disabled");
 
         $("#FECHA_SALIDA_PROG").daterangepicker({
             singleDatePicker: true,

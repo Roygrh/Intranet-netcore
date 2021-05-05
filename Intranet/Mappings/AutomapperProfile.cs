@@ -30,6 +30,7 @@ namespace Intranet.Mappings
                 .ForMember(entity => entity.TIPO_CONTENIDO_FILE, entityVM => entityVM.MapFrom(e => e.FILE.ContentType)); ;
             CreateMap<AuthorizationStateVM, IT_ESTADO_AUTORIZACION>();
             CreateMap<AuthorizationMovementVM, IT_AUTORIZACION_MOVIMIENTOS>();
+            CreateMap<FunctionalAreaVM, IT_AREA_FUNCIONAL >();
             CreateMap<PersonalVM, ca_personal>();
             CreateMap<AttendanceVM, intranet_asistencia>();
             CreateMap<VacationVM, intranet_vacaciones>();
@@ -46,6 +47,7 @@ namespace Intranet.Mappings
                 .ForMember(entityVM => entityVM.AUTHORIZINGUSER, entity => entity.MapFrom(e => user));
             CreateMap<IT_ESTADO_AUTORIZACION, AuthorizationStateVM>();
             CreateMap<IT_AUTORIZACION_MOVIMIENTOS, AuthorizationMovementVM>();
+            CreateMap<IT_AREA_FUNCIONAL, FunctionalAreaVM>();
             CreateMap<ca_personal, PersonalVM>();
             CreateMap<intranet_asistencia, AttendanceVM>();
             CreateMap<intranet_vacaciones, VacationVM>();

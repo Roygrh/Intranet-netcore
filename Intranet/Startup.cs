@@ -43,18 +43,18 @@ namespace Intranet
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("IntranetRedImarpeConnection")));
+            options.UseSqlServer(Configuration.GetConnectionString("IntranetConnection")));
 
             services.AddDbContext<ApplicationSiconDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("SiconRedImarpeConnection")));
+            options.UseSqlServer(Configuration.GetConnectionString("SiconConnection")));
 
 
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddScoped<IAuthenticationService, LdapAuthenticationService>();
-            /*services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<AuthorizationStateManagement>();
-            services.AddTransient<DataTimeManagement>();*/
+            services.AddTransient<DataTimeManagement>();
 
             /*services.AddMvcCore(options => {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();

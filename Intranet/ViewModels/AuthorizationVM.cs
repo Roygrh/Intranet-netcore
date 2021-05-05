@@ -15,6 +15,8 @@ namespace Intranet.ViewModels
         [Display(Name = "Nombre")]
         public string USARIO_CREA_NOMBRE { get; set; }
         public decimal ID_AREA_FUNCIONAL { get; set; }
+        [Display(Name = "Area Funcional")]
+        public string NOMBRE_AREA_FUNCIONAL { get; set; }
         [Display(Name = "Motivo")]
         public string MOTIVO { get; set; }
         [Display(Name = "Retorno")]
@@ -57,6 +59,8 @@ namespace Intranet.ViewModels
         public PersonalVM AUTHORIZINGUSER { get; set; }
         [Display(Name = "Estado")]
         public AuthorizationStateVM ESTADO { get; set; }
+        [Display(Name = "Lista de areas funcionales")]
+        public List<FunctionalAreaVM> LISTA_AREAS_FUNCIONALES { get; set; }
         [Display(Name = "Lista de estados")]
         public List<AuthorizationStateVM> LISTA_DE_ESTADOS { get; set; }
         [Display(Name = "Lista de estados")]

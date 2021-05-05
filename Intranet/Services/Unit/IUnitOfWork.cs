@@ -13,6 +13,7 @@ namespace Intranet.Services.Unit
         IRepository<IT_CONTENIDO_GENERAL> Contents { get; }
         IRepository<IT_TIPO_CONTENIDO> ContentTypes { get; }
         IRepository<IT_AUTORIZACION> Authorizations { get; }
+        IRepository<IT_AREA_FUNCIONAL> FunctionalAreas { get; }
         IRepository<IT_AUTORIZACION_MOVIMIENTOS> MovementAuthorizations { get; }
         IRepository<IT_ESTADO_AUTORIZACION> AuthorizationStatus { get; }
         IRepository<IT_CONTENIDO_GENERAL_AUDITORIA> ContentsAuditory { get; }

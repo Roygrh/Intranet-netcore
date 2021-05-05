@@ -16,6 +16,7 @@ namespace Intranet.Services.Unit
         private GenericRepository<IT_CONTENIDO_GENERAL> ContentRepository;
         private GenericRepository<IT_TIPO_CONTENIDO> ContentTypeRepository;
         private GenericRepository<IT_AUTORIZACION> AuthorizationRepository;
+        private GenericRepository<IT_AREA_FUNCIONAL> FunctionalAreasRepository;
         private GenericRepository<IT_AUTORIZACION_MOVIMIENTOS> MovementAuthorizationRepository;
         private GenericRepository<IT_ESTADO_AUTORIZACION> AuthorizationStatusRepository;
         private GenericRepository<IT_CONTENIDO_GENERAL_AUDITORIA> ContentAuditoryRepository;
@@ -66,6 +67,19 @@ namespace Intranet.Services.Unit
                     this.AuthorizationRepository = new GenericRepository<IT_AUTORIZACION>(_context);
                 }
                 return AuthorizationRepository;
+            }
+        }
+
+        IRepository<IT_AREA_FUNCIONAL> IUnitOfWork.FunctionalAreas
+        {
+            get
+            {
+
+                if (this.FunctionalAreasRepository == null)
+                {
+                    this.FunctionalAreasRepository = new GenericRepository<IT_AREA_FUNCIONAL>(_context);
+                }
+                return FunctionalAreasRepository;
             }
         }
 

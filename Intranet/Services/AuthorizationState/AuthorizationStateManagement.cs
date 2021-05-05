@@ -25,6 +25,9 @@ namespace Intranet.Services.AuthorizationState
         {
             var authorization = new AuthorizationVM();
             authorization.LISTA_DE_ESTADOS = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
+            var list = new List<FunctionalAreaVM> { new FunctionalAreaVM { AREA_FUNCIONAL_ID = 0, NOMBRE_AREA_FUNCIONAL = "-- Seleccionar Área --" } };
+            list.AddRange(this._mapper.Map<List<FunctionalAreaVM>>(this._unitOfWork.FunctionalAreas.Get().ToList()));
+            authorization.LISTA_AREAS_FUNCIONALES = list;
             authorization.ESTADO = new AuthorizationStateVM();
             authorization.ESTADO.NOMBRE_ESTADO = "SIN SOLICITAR";
             authorization.RETORNO = "SI";
