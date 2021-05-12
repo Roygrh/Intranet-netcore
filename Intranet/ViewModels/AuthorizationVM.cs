@@ -10,7 +10,7 @@ namespace Intranet.ViewModels
     public class AuthorizationVM
     {
         public decimal AUTORIZACION_ID { get; set; }
-        [Display(Name = "N° Formato")]
+        [Display(Name = "Dni usuario")]
         public string USUARIO_CREA { get; set; }
         [Display(Name = "Nombre")]
         public string USARIO_CREA_NOMBRE { get; set; }
@@ -52,11 +52,11 @@ namespace Intranet.ViewModels
         [Display(Name = "Archivo")]
         public IFormFile FILE { get; set; }
         [Display(Name = "Usuario")]
-        public BasicUserInformationVM USER { get; set; }
+        public UserVM OWNERUSER { get; set; }
         [Display(Name = "Usuario")]
-        public PersonalVM OWNERUSER { get; set; }
-        [Display(Name = "Usuario")]
-        public PersonalVM AUTHORIZINGUSER { get; set; }
+        public UserVM AUTHORIZINGUSER { get; set; }
+        [Display(Name = "Usuario en sesión")]
+        public UserVM SESSIONUSER { get; set; }
         [Display(Name = "Estado")]
         public AuthorizationStateVM ESTADO { get; set; }
         [Display(Name = "Lista de areas funcionales")]

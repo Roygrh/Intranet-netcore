@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 
 namespace Intranet.Services.Repository
 {
@@ -86,12 +85,6 @@ namespace Intranet.Services.Repository
         {
             dbSet.Attach(entityToUpdate);
             context.Entry(entityToUpdate).State = EntityState.Modified;
-        }
-
-        public virtual TEntity Procedure(int days)
-        {
-            var result = dbSet.FromSqlRaw<TEntity>("").ToList().First();
-            return result;
         }
     }
 }

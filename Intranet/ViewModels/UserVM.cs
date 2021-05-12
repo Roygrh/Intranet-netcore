@@ -12,7 +12,13 @@ namespace Intranet.ViewModels
         public string UserName { get; set; }
         [Display(Name = "Nombre")]
         public string UserFullName { get; set; }
+        [Display(Name = "DNI")]
+        public string DNI { get; set; }
         [Display(Name = "Correo electronico")]
         public string Email { get; set; }
+        [Display(Name = "Tipo de usuario")]
+        public decimal UserType { get; set; }
+        [Display(Name = "Rol usuario")]
+        public string UserTypeName { get; set; }
     }
 }

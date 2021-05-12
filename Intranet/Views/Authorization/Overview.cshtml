@@ -12,7 +12,7 @@
             <input type="search" class="form-control rounded col-xs-8 col-sm-8 col-md-8 col-lg-8" placeholder="Buscar" aria-label="Buscar"
                    aria-describedby="search-addon" />
             <button type="button" class="btn btn-outline-dark">buscar</button>
-            <button type="button" class="btn btn-outline-secondary" onclick="changeview()">cambiar de vista</button>
+            <!--<button type="button" class="btn btn-outline-secondary" onclick="changeview()">cambiar de vista</button>-->
         </div>
     </div>
 
@@ -45,6 +45,9 @@
                         <th>
                             <label asp-for="Authorization.FECHA_RETORNO_PROG" class="control-label font-weight-bold"></label>
                         </th>
+                        <th>
+                            <label class="control-label font-weight-bold">Operaciones</label>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,7 +55,7 @@
                     {
                         <tr>
                             <td>
-                                @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => modelItem.LISTA_DE_ESTADOS.Find(m => m.ESTADO_ID.Equals(item.ID_ESTADO)).NOMBRE_ESTADO, new { htmlAttributes = new { @class = "form-control" } })
@@ -67,20 +70,52 @@
                                 @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
                             </td>
                             <td>
-                                @item.FECHA_SALIDA_PROG_DATE_TIME.Value.ToString("dd/MM/yyyy hh:mm tt")
-                            </td>
-                            @if (item.RETORNO.Trim().ToLower().Equals("si"))
-                            {
-                                <td>
-                                    @item.FECHA_RETORNO_PROG_DATE_TIME.Value.ToString("dd/MM/yyyy hh:mm tt")
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
+                                @if (item.HORA_SALIDA.HasValue)
+                                {
+                                    @item.HORA_SALIDA.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                }
+                                else
+                                {
                                     <label class="control-label font-weight-bold">--</label>
-                                </td>
-                            }
+                                }
+                            </td>
+                            <td>
+                                @if (item.RETORNO.Trim().ToLower().Equals("si") && item.HORA_RETORNO.HasValue)
+                                {
+                                    @item.HORA_RETORNO.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                }
+                                else if (item.RETORNO.Trim().ToLower().Equals("no"))
+                                {
+                                    <label class="control-label font-weight-bold">Sin retorno</label>
+                                }
+                                else
+                                {
+                                    <label class="control-label font-weight-bold">--</label>
+                                }
+                            </td>
+                            <td>
+                                <div class="form-inline">
+                                    @if (Model.LISTA_DE_ESTADOS.Where(e => e.ESTADO_ID == item.ID_ESTADO).First().NOMBRE_ESTADO.ToLower().Equals("pendiente"))
+                                    {
+                                        <button type="button" title="Operar" value="Operar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Change-state-admin", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                            <i class="fa fa-edit"></i>
+                                            Autorizar/Rechazar
+                                        </button>
+                                    }
+                                    else if(Model.LISTA_DE_ESTADOS.Find(e => e.ESTADO_ID == item.ID_ESTADO).NOMBRE_ESTADO.ToLower().Equals("ejecutado") ||
+                                            Model.LISTA_DE_ESTADOS.Find(e => e.ESTADO_ID == item.ID_ESTADO).NOMBRE_ESTADO.ToLower().Equals("autorizado"))
+                                    {
+                                        <button type="button" title="Operar" value="Operar" class="btn btn-outline-danger" onclick="location.href='@Url.Action("Change-state-admin", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                            <i class="fa fa-edit"></i>
+                                            Cancelar
+                                        </button>
+                                    }
+                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                        <i class="fa fa-edit"></i>
+                                        Detalle
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -117,7 +152,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
                                 </td>
                                 <td>
                                     @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
@@ -166,7 +201,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
                                 </td>
                                 <td>
                                     @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
@@ -215,7 +250,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
                                 </td>
                                 <td>
                                     @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
@@ -267,7 +302,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
                                 </td>
                                 <td>
                                     @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
@@ -316,7 +351,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
                                 </td>
                                 <td>
                                     @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
@@ -365,7 +400,7 @@
                         {
                             <tr>
                                 <td>
-                                    @Html.DisplayFor(modelItem => item.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
                                 </td>
                                 <td>
                                     @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
@@ -400,7 +435,9 @@
     $(document).ready(function () {
         $(".body-content").addClass("col-xs-11 col-sm-11 col-md-11 col-lg-11")
 
-        $(".main-table").addClass('d-none');
+        $(".second-row").addClass('d-none');
+        $(".third-row").addClass('d-none');
+        //$(".main-table").addClass('d-none');
     });
 
     function changeview() {

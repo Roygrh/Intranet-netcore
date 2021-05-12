@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Intranet.Data;
+using Intranet.Models;
 using Intranet.Services.AuthorizationState;
 using Intranet.Services.DateTimeManagement;
 using Intranet.Services.FileConverter;
@@ -40,17 +41,9 @@ namespace Intranet.Controllers
 
         public ActionResult Index()
         {
-            var user = HttpContext.User;
-            var b = user.Claims;
-            var c = user.Identities;
-            var d = user.Identity;
-            //var e = HttpContext.Session;
-            var f = user.FindFirstValue("UserName");
-            var g = user.FindFirst(ClaimTypes.Email);
-            var h = user.FindFirst(ClaimTypes.Name);
-            var tmp = this._authorizationStateManagement.GetAuthorizationPaging(DateTime.Now.AddDays(-15), DateTime.Now, "", 1, 5);
-            List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(a => a.USUARIO_CREA.Equals("01844800")).ToList());
-            var authorizationtmp = this._unitOfWork.Authorizations.Get().First();
+            UserVM user = GetDataUserCookie();
+
+            List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.StoredProcedures.Sp_Commissions(user.DNI));
             var states = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
 
             foreach (var authorization in authorizations)
@@ -63,9 +56,21 @@ namespace Intranet.Controllers
 
         public ActionResult Overview()
         {
-            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-5), DateTime.Now);
-            overview.Authorization = new AuthorizationVM();
-            return View(overview);
+            UserVM user = GetDataUserCookie();
+            if (user != null && user.UserTypeName.ToLower().Contains("admin"))
+            {
+                OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-20), DateTime.Now);
+                overview.Authorization = new AuthorizationVM();
+                return View(overview);
+            }
+            else if (user.UserTypeName.ToLower().Contains("estandar"))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Watchview));
+            }
         }
 
         public ActionResult Watchview()
@@ -77,6 +82,8 @@ namespace Intranet.Controllers
 
         public ActionResult HRview()
         {
+            UserVM user = GetDataUserCookie();
+
             OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-5), DateTime.Now);
             overview.Authorization = new AuthorizationVM();
             return View(overview);
@@ -85,13 +92,16 @@ namespace Intranet.Controllers
         // GET: AuthorizationController/Details/5
         public ActionResult Details(decimal id)
         {
+            UserVM user = GetDataUserCookie();
             this._authorizationStateManagement.SelectAuthorization(id).IncludeStatesList().IncludeOwnMovementsListAndStatesList();
+            this._authorizationStateManagement.Authorization.SESSIONUSER = user;
             return View(this._authorizationStateManagement.Authorization);
         }
 
         // GET: AuthorizationController/Create
         public ActionResult Create()
         {
+            UserVM user = GetDataUserCookie();
             var authorization = this._authorizationStateManagement.CreateNewAuthorization();
             AuthorizationObjectInitialization(authorization);
             return View(authorization);
@@ -104,6 +114,9 @@ namespace Intranet.Controllers
         {
             try
             {
+                var user = GetDataUserCookie();
+                Authorization.USUARIO_CREA = user.DNI;
+                Authorization.USARIO_CREA_NOMBRE = user.UserFullName;
                 this._authorizationStateManagement.SelectAuthorization(Authorization).SwitchToPending();
                 return RedirectToAction(nameof(Index));
             }
@@ -116,24 +129,39 @@ namespace Intranet.Controllers
         // GET: AuthorizationController/Edit/5
         public ActionResult Edit(int id)
         {
-            var authorization = this._authorizationStateManagement.SelectAuthorization(id).Authorization;
+            UserVM user = GetDataUserCookie();
+            var authorization = this._authorizationStateManagement
+                .SelectAuthorization(id)
+                .Authorization;
+
+            if (user != null && !user.DNI.Equals(authorization.USUARIO_CREA))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
             return View(authorization);
         }
 
         // POST: AuthorizationController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AuthorizationVM Authorization)
+        public ActionResult Edit(decimal id, AuthorizationVM Authorization)
         {
             try
             {
-                var authorization = this._unitOfWork.Authorizations.GetById(id);
-                authorization.FECHA_SALIDA_PROG = this._dateTimeManagement.StringToDateTime(Authorization.FECHA_SALIDA_PROG + " " + Authorization.HORA_SALIDA_PROG);
-                authorization.FECHA_RETORNO_PROG = this._dateTimeManagement.StringToDateTime(Authorization.FECHA_RETORNO_PROG + " " + Authorization.HORA_RETORNO_PROG);
+                UserVM user = GetDataUserCookie();
+
+                if (user != null && !user.DNI.Equals(Authorization.USUARIO_CREA))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                var authorization = this._authorizationStateManagement.SelectAuthorization(id).GetAuthorization();
+                authorization.FECHA_SALIDA_PROG = this._dateTimeManagement.StringToDateTime(Authorization.FECHA_SALIDA_PROG);
+                authorization.FECHA_RETORNO_PROG = this._dateTimeManagement.StringToDateTime(Authorization.FECHA_RETORNO_PROG);
                 authorization.RETORNO = Authorization.RETORNO;
                 authorization.DESCRIPCION = Authorization.DESCRIPCION;
                 authorization.FECHA_EDICION = DateTime.Now;
-                authorization.USUARIO_EDITA = "08887865";
+                authorization.MOTIVO = Authorization.MOTIVO;
 
                 if (Authorization.FILE != null)
                 {
@@ -160,6 +188,7 @@ namespace Intranet.Controllers
         // GET: AuthorizationController/Delete/5
         public ActionResult Delete(int id)
         {
+            return RedirectToAction(nameof(Index));
             var authorization = this._authorizationStateManagement.SelectAuthorization(id).Authorization;
             return View(authorization);
         }
@@ -188,8 +217,16 @@ namespace Intranet.Controllers
 
         public ActionResult Cancel(decimal id)
         {
+            UserVM user = GetDataUserCookie();
             var authorization = this._authorizationStateManagement.SelectAuthorization(id).Authorization;
-            return View(authorization);
+            if(user != null && (user.UserTypeName.ToLower().Contains("admin") || user.DNI.Equals(authorization.USUARIO_CREA) ))
+            {
+                return View(authorization);
+            }
+            else
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost, ActionName("Delete")]
@@ -225,10 +262,10 @@ namespace Intranet.Controllers
         {
             var authorization = this._authorizationStateManagement.SelectAuthorization(id).Authorization;
             authorization.OWNERUSER = this._unitOfWork.AttendanceRepository.Get(a => a.id_personal == authorization.USUARIO_CREA)
-                .Select(u => {
-                    var user = new PersonalVM();
-                    user.cod_personal = u.id_personal;
-                    user.nombre = u.nombres;
+                .Select(a => {
+                    var user = new UserVM();
+                    user.DNI = a.id_personal;
+                    user.UserFullName = a.nombres;
                     return user;
                 }).First();
             return View(authorization);
@@ -239,10 +276,10 @@ namespace Intranet.Controllers
         {
             var authorization = this._authorizationStateManagement.SelectAuthorization(id).Authorization;
             authorization.OWNERUSER = this._unitOfWork.AttendanceRepository.Get(a => a.id_personal == authorization.USUARIO_CREA)
-                .Select(u => {
-                    var user = new PersonalVM();
-                    user.cod_personal = u.id_personal;
-                    user.nombre = u.nombres;
+                .Select(a => {
+                    var user = new UserVM();
+                    user.DNI = a.id_personal;
+                    user.UserFullName = a.nombres;
                     return user;
                 }).First();
             return View(authorization);
@@ -253,10 +290,10 @@ namespace Intranet.Controllers
         {
             var authorization = this._authorizationStateManagement.SelectAuthorization(id).Authorization;
             authorization.OWNERUSER = this._unitOfWork.AttendanceRepository.Get(a => a.id_personal == authorization.USUARIO_CREA)
-                .Select(u => {
-                    var user = new PersonalVM();
-                    user.cod_personal = u.id_personal;
-                    user.nombre = u.nombres;
+                .Select(a => {
+                    var user = new UserVM();
+                    user.DNI = a.id_personal;
+                    user.UserFullName = a.nombres;
                     return user;
                 }).First();
             return View(authorization);
@@ -268,7 +305,7 @@ namespace Intranet.Controllers
         {
             var user = GenerateUserForAuthorization();
             this._authorizationStateManagement.SelectAuthorization(IdAuthorization);
-            this._authorizationStateManagement.Authorization.USUARIO_AUTORIZA = user.cod_personal;
+            this._authorizationStateManagement.Authorization.USUARIO_AUTORIZA = user.DNI;
 
             var state = this._unitOfWork.AuthorizationStatus.GetById(IdState);
 
@@ -295,23 +332,39 @@ namespace Intranet.Controllers
 
         private AuthorizationVM AuthorizationObjectInitialization(AuthorizationVM authorization)
         {
-            PersonalVM user = new PersonalVM();
-            authorization.USUARIO_CREA = user.cod_personal = "01844800";
-            user.nombre = "AMARU CHAMBILLA GLICERIO REYES";
+            UserVM user = GetDataUserCookie();
+
+            authorization.USUARIO_CREA = user.DNI;
             authorization.OWNERUSER = user;
-            authorization.UNIDAD_ORGANICA = "UNIDAD ORGANICA";
-            authorization.ID_TIPO_USUARIO = 2;
-            authorization.ID_AREA_FUNCIONAL = 1;
+            authorization.ID_TIPO_USUARIO = user.UserType;
             authorization.AUTHORIZINGUSER = GenerateUserForAuthorization();
 
             return authorization;
         }
 
-        private PersonalVM GenerateUserForAuthorization()
+        private UserVM GetDataUserCookie()
         {
-            PersonalVM user = new PersonalVM();
-            user.cod_personal = "08887865";
-            user.nombre = "AGUILAR ARAKAKI REGINA ELENA";
+            var userCookie = HttpContext.User;
+            UserVM user = null;
+
+            if (userCookie.Identity.IsAuthenticated)
+            {
+                user = new UserVM
+                {
+                    UserName = userCookie.FindFirstValue("UserName"),
+                    UserFullName = userCookie.FindFirstValue(ClaimTypes.Name),
+                    Email = userCookie.FindFirstValue(ClaimTypes.Email),
+                    DNI = userCookie.FindFirstValue("DNI"),
+                    UserTypeName = userCookie.FindFirstValue("userType")
+                };
+            }
+
+            return user;
+        }
+
+        private UserVM GenerateUserForAuthorization()
+        {
+            UserVM user = this._mapper.Map<UserVM>(this._unitOfWork.ActiveDirectoryUsers.Get(a => a.DNI.Equals("10506225")).FirstOrDefault());
 
             return user;
         }

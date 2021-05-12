@@ -18,9 +18,14 @@ namespace Intranet.Services.Unit
         IRepository<IT_ESTADO_AUTORIZACION> AuthorizationStatus { get; }
         IRepository<IT_CONTENIDO_GENERAL_AUDITORIA> ContentsAuditory { get; }
         IRepository<IT_AUTORIZACION_AUDITORIA> AuthorizationAuditory { get; }
+        IRepository<IT_ACTIVE_DIRECTORY_USER> ActiveDirectoryUsers { get; }
+        IRepository<IT_USER_TYPE> UserTypes { get; }
+        IStoredProcedureRepository StoredProcedures { get; }
+
         IRepository<ca_personal> PersonalRepository { get; }
         IRepository<intranet_asistencia> AttendanceRepository { get; }
         IRepository<intranet_vacaciones> VacationsRepository { get; }
+
         void Commit();
         void RollBack();
     }

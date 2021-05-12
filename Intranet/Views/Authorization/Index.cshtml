@@ -6,14 +6,18 @@
 
 <h1>Lista de papeletas registradas</h1>
 
-<p>
-    <a asp-action="Create" type="button" class="btn btn-outline-info">Solicitar comisión</a>
-</p>
+<div class="row container form-inline col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <p>
+        <a asp-action="Create" type="button" class="btn btn-outline-info">Solicitar comisión</a>
+    </p>
+    <p class="text-xl-right">Nota: Solo puedes editar o cancelar la solicitud cuendo se encuentra en pendiente</p>
+</div>
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.HORA_SALIDA)
+                @Html.DisplayNameFor(model => model.FECHA_SALIDA_PROG)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.MOTIVO)
@@ -24,13 +28,16 @@
             <th>
                 @Html.DisplayNameFor(model => model.FECHA_CREACION)
             </th>
+            <th>
+                Operaciones
+            </th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.HORA_SALIDA_PROG)
+                @Html.DisplayFor(modelItem => item.FECHA_SALIDA_PROG)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.MOTIVO)
@@ -43,17 +50,20 @@
             </td>
             <td>
                 <div class="form-inline">
-                    <button type="button" title="Editar" value="Editar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Edit", "Authorization", new { id = item.AUTORIZACION_ID })'">
-                        <i class="fa fa-edit"></i>
-                        Editar
-                    </button>
+                    @if (item.ESTADO.NOMBRE_ESTADO.ToLower().Equals("pendiente"))
+                    {
+                        <button type="button" title="Editar" value="Editar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Edit", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                            <i class="fa fa-edit"></i>
+                            Editar
+                        </button>
+                        <button type="button" class="btn btn-outline-danger" title="Borrar" value="Borrar" onclick="location.href='@Url.Action("Cancel", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                            <i class="fa fa-trash-o"></i>
+                            Cancelar
+                        </button>
+                    }
                     <button type="button" title="Detalle" value="Detalle" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
                         <i class="fa fa-eye"></i>
                         Detalle
-                    </button>
-                    <button type="button" class="btn btn-outline-danger" title="Borrar" value="Borrar" onclick="location.href='@Url.Action("Cancel", "Authorization", new { id = item.AUTORIZACION_ID })'">
-                        <i class="fa fa-trash-o"></i>
-                        Cancelar
                     </button>
                 </div>
                 <!--

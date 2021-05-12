@@ -22,6 +22,8 @@ namespace Intranet.Data
         public DbSet<IT_CONTENIDO_GENERAL_AUDITORIA> IT_CONTENIDO_GENERAL_AUDITORIA { get; set; }
         public DbSet<IT_AUTORIZACION_AUDITORIA> IT_AUTORIZACION_AUDITORIA { get; set; }
         public DbSet<IT_AREA_FUNCIONAL> IT_AREA_FUNCIONAL { get; set; }
+        public DbSet<IT_ACTIVE_DIRECTORY_USER> IT_ACTIVE_DIRECTORY_USER { get; set; }
+        public DbSet<IT_USER_TYPE> IT_USER_TYPE { get; set; }
         //public DbSet<IT_MOTIVO_AUTORIZACION_AUDITOR> IT_MOTIVO_AUTORIZACION_AUDITOR { get; set; }
     }
 }
