@@ -34,7 +34,7 @@ namespace Intranet.Controllers
         {
             GetUserName(login);
             var user = this._authService.Login(login.UserName, login.Password);
-            user = FillUserData(user);
+            //user = FillUserData(user);
 
             if (null != user)
             {
@@ -42,7 +42,7 @@ namespace Intranet.Controllers
                 var userClaims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.Name, user.DisplayName),
-                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Email, login.Email),
                     new Claim("UserName",user.UserName),
                     new Claim("DNI", user.DNI)
                 };

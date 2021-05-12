@@ -43,10 +43,10 @@ namespace Intranet
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddDbContext<ApplicationDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("IntranetConnection")));
+            options.UseSqlServer(Configuration.GetConnectionString("IntranetRedImarpeConnection")));
 
             services.AddDbContext<ApplicationSiconDbContext>(options =>
-            options.UseSqlServer(Configuration.GetConnectionString("SiconConnection")));
+            options.UseSqlServer(Configuration.GetConnectionString("SiconRedImarpeConnection")));
 
 
             services.AddControllersWithViews();
