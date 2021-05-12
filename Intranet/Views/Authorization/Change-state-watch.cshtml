@@ -55,7 +55,7 @@ else
                     @Html.LabelFor(model => model.ESTADO, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
                     <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
                         <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            <span class="input-group-text text-dark"><i class="fas fa-file-alt"></i></span>
                         </div>
                         @Html.EditorFor(model => model.ESTADO.NOMBRE_ESTADO, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
                         @Html.HiddenFor(model => model.ID_ESTADO)
@@ -68,19 +68,19 @@ else
                     @Html.LabelFor(model => model.OWNERUSER, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
                     <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
                         <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            <span class="input-group-text text-dark"><i class="fas fa-user"></i></span>
                         </div>
-                        @Html.EditorFor(model => model.OWNERUSER.nombre, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.EditorFor(model => model.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
                     </div>
                 </div>
 
                 <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    @Html.LabelFor(model => model.UNIDAD_ORGANICA, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
+                    @Html.LabelFor(model => model.NOMBRE_AREA_FUNCIONAL, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
                     <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
                         <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            <span class="input-group-text text-dark"><i class="fas fa-warehouse"></i></span>
                         </div>
-                        @Html.EditorFor(model => model.UNIDAD_ORGANICA, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        @Html.EditorFor(model => model.NOMBRE_AREA_FUNCIONAL, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
                         @Html.HiddenFor(model => model.ID_AREA_FUNCIONAL)
                         @Html.HiddenFor(model => model.ID_TIPO_USUARIO)
                     </div>
@@ -92,7 +92,7 @@ else
                     @Html.LabelFor(model => model.USUARIO_CREA, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
                     <div class="col-md-8 form-inline input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-calendar"></i></span>
+                            <span class="input-group-text text-dark"><i class="fas fa-address-card"></i></span>
                         </div>
                         @Html.EditorFor(model => model.USUARIO_CREA, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
                     </div>
@@ -102,7 +102,7 @@ else
                     @Html.LabelFor(model => model.FECHA_CREACION, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
                     <div class="col-md-8 form-inline input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
                         </div>
                         <input class="form-control text-box single-line" data-val="true" data-val-date="The field Fecha de registro must be a date." disabled="disabled" id="FECHA_CREACION" name="FECHA_CREACION" type="text" value="@Model.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm:ss tt")">
                     </div>
@@ -114,7 +114,7 @@ else
                     <label asp-for="MOTIVO" class="control-label col-md-4 font-weight-bold justify-content-xl-start justify-content-sm-start justify-content-md-start justify-content-lg-start"></label>
                     <div class="form-inline input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
                         <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-list-ul"></i></span>
+                            <span class="input-group-text text-dark"><i class="fas fa-align-justify"></i></span>
                         </div>
                         <input asp-for="MOTIVO" class="form-control text-box single-line" data-val="true" id="MOTIVO" name="MOTIVO" type="text" value="">
                         <span class="text-danger font-weight-bold motive-message"></span>
@@ -150,35 +150,6 @@ else
                 </div>
             </div>
 
-            <div class="row">
-                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    @Html.LabelFor(model => model.HORA_SALIDA_PROG, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
-                    <div class="col-md-8 form-inline input-group clockpicker">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        <input class="form-control text-box single-line right-format return" id="HORA_SALIDA_PROG" name="HORA_SALIDA_PROG" placeholder="ingrese la hora de salida" type="text" value="@Model.HORA_SALIDA_PROG" disabled>
-                    </div>
-                </div>
-
-                <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                    @Html.LabelFor(model => model.HORA_RETORNO_PROG, htmlAttributes: new { @class = "control-label col-md-4 font-weight-bold" })
-                    <div class="col-md-8 form-inline input-group clockpicker">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-clock-o"></i></span>
-                        </div>
-                        @if (Model.RETORNO.Equals("NO"))
-                        {
-                            <input class="form-control text-box single-line" id="HORA_RETORNO_PROG" type="text" value="@Model.HORA_RETORNO_PROG" disabled>
-                        }
-                        else
-                        {
-                            <input class="form-control text-box single-line" id="HORA_RETORNO_PROG" name="HORA_RETORNO_PROG" placeholder="ingrese la hora de retorno" type="text" value="@Model.HORA_RETORNO_PROG" disabled>
-                        }
-                    </div>
-                </div>
-            </div>
-
             <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
                 <div class="form-group form-inline col-xs-8 col-sm-8 col-md-8 col-lg-8">
                     <span class="validate-formulary text-danger font-weight-bold"></span>
@@ -205,7 +176,7 @@ else
                     @Html.LabelFor(model => model.DESCRIPCION, htmlAttributes: new { @class = "control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4" })
                     <div class="col-md-12 form-inline input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text text-dark"><i class="fa fa-file-text"></i></span>
+                            <span class="input-group-text text-dark"><i class="fas fa-file-alt"></i></span>
                         </div>
                         @Html.TextAreaFor(model => model.DESCRIPCION, new { @class = "form-control", @placeholder = "Ingresa la descripción", @style = "max-width:100%;", @disabled = "disabled" })
                     </div>

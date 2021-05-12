@@ -18,5 +18,6 @@ namespace Intranet.ViewModels
         public string Password { get; set; }
         [Display(Name = "Recordarme?")]
         public bool RememberMe { get; set; }
+        public string message { get; set; }
     }
 }

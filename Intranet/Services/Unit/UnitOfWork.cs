@@ -21,6 +21,9 @@ namespace Intranet.Services.Unit
         private GenericRepository<IT_ESTADO_AUTORIZACION> AuthorizationStatusRepository;
         private GenericRepository<IT_CONTENIDO_GENERAL_AUDITORIA> ContentAuditoryRepository;
         private GenericRepository<IT_AUTORIZACION_AUDITORIA> AuthorizationAuditoryRepository;
+        private GenericRepository<IT_ACTIVE_DIRECTORY_USER> ActiveDirectoryUserRepository;
+        private GenericRepository<IT_USER_TYPE> UserTypeRepository;
+        private StoredProcedureRepository StoredProcedureRepository;
         private SiconGenericRepository<ca_personal> PersonalRepository;
         private SiconGenericRepository<intranet_asistencia> AttendanceRepository;
         private SiconGenericRepository<intranet_vacaciones> VacationsRepository;
@@ -132,6 +135,45 @@ namespace Intranet.Services.Unit
                     this.AuthorizationAuditoryRepository = new GenericRepository<IT_AUTORIZACION_AUDITORIA>(_context);
                 }
                 return AuthorizationAuditoryRepository;
+            }
+        }
+
+        IRepository<IT_ACTIVE_DIRECTORY_USER> IUnitOfWork.ActiveDirectoryUsers
+        {
+            get
+            {
+
+                if (this.ActiveDirectoryUserRepository == null)
+                {
+                    this.ActiveDirectoryUserRepository = new GenericRepository<IT_ACTIVE_DIRECTORY_USER>(_context);
+                }
+                return ActiveDirectoryUserRepository;
+            }
+        }
+
+        IRepository<IT_USER_TYPE> IUnitOfWork.UserTypes
+        {
+            get
+            {
+
+                if (this.UserTypeRepository == null)
+                {
+                    this.UserTypeRepository = new GenericRepository<IT_USER_TYPE>(_context);
+                }
+                return UserTypeRepository;
+            }
+        }
+
+        IStoredProcedureRepository IUnitOfWork.StoredProcedures
+        {
+            get
+            {
+
+                if (this.StoredProcedureRepository == null)
+                {
+                    this.StoredProcedureRepository = new StoredProcedureRepository(_context);
+                }
+                return StoredProcedureRepository;
             }
         }
 

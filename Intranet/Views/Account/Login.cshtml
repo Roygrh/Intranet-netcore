@@ -22,6 +22,10 @@
                 <input asp-for="Password" type="password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
+            @if (Model != null)
+            {
+                <span class="text-danger">@Model.message</span>
+            }
             <div class="form-group">
                 <div class="checkbox">
                     <label asp-for="RememberMe">

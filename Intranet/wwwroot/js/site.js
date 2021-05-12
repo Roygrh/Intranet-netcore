@@ -8,10 +8,20 @@
     })
         .done(function (result) {
             if (result != null) {
-                $('#username a').text(result.userFullName);
+
+                if (!result.userTypeName.toLowerCase().includes("admin")) {
+                    $('#overview').remove();
+                    $('#hrview').remove();
+                }
+
+                $('#userrol a i').after(" " + result.userTypeName);
+                $('#username a i').after(" " + result.userFullName);
                 $('#login').remove();
             }
             else {
+                $('#overview').remove();
+                $('#owncommissions').remove();
+                $('#hrview').remove();
                 $('#username').remove();
                 $('#logout').remove();
             }

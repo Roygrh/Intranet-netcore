@@ -1,4 +1,5 @@
 using Intranet.Data;
+using Intranet.Services.Account;
 using Intranet.Services.AuthorizationState;
 using Intranet.Services.DateTimeManagement;
 using Intranet.Services.Ldap;
@@ -54,6 +55,7 @@ namespace Intranet
             services.AddScoped<IAuthenticationService, LdapAuthenticationService>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<AuthorizationStateManagement>();
+            services.AddTransient<AccountService>();
             services.AddTransient<DataTimeManagement>();
 
             /*services.AddMvcCore(options => {

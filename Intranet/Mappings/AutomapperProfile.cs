@@ -3,6 +3,7 @@ using Intranet.Models;
 using Intranet.Models.Sicon;
 using Intranet.Services.DateTimeManagement;
 using Intranet.Services.FileConverter;
+using Intranet.Services.Ldap;
 using Intranet.ViewModels;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -17,9 +18,12 @@ namespace Intranet.Mappings
         public AutomapperProfile()
         {
             var dateTimeManagement = new DataTimeManagement();
-            PersonalVM user = new PersonalVM();
-            user.cod_personal = "PES-001234";
-            user.nombre = "Mario Huapaya Chumpitaz";
+            UserVM user = new UserVM();
+            user.DNI = "10506225";
+            user.UserFullName = "Marcos Almengor Rios";
+            user.Email = "malmengor@imarpe.gob.pe";
+            user.UserName = "malmengor";
+            user.UserType = 2;
 
             //Convert from entity VM to entity data
             CreateMap<AuthorizationVM, IT_AUTORIZACION>()
@@ -31,6 +35,7 @@ namespace Intranet.Mappings
             CreateMap<AuthorizationStateVM, IT_ESTADO_AUTORIZACION>();
             CreateMap<AuthorizationMovementVM, IT_AUTORIZACION_MOVIMIENTOS>();
             CreateMap<FunctionalAreaVM, IT_AREA_FUNCIONAL >();
+            CreateMap<ActiveDirectoryUserVM, IT_ACTIVE_DIRECTORY_USER>();
             CreateMap<PersonalVM, ca_personal>();
             CreateMap<AttendanceVM, intranet_asistencia>();
             CreateMap<VacationVM, intranet_vacaciones>();
@@ -48,6 +53,7 @@ namespace Intranet.Mappings
             CreateMap<IT_ESTADO_AUTORIZACION, AuthorizationStateVM>();
             CreateMap<IT_AUTORIZACION_MOVIMIENTOS, AuthorizationMovementVM>();
             CreateMap<IT_AREA_FUNCIONAL, FunctionalAreaVM>();
+            CreateMap<IT_ACTIVE_DIRECTORY_USER, ActiveDirectoryUserVM>();
             CreateMap<ca_personal, PersonalVM>();
             CreateMap<intranet_asistencia, AttendanceVM>();
             CreateMap<intranet_vacaciones, VacationVM>();
@@ -63,6 +69,17 @@ namespace Intranet.Mappings
             .ForMember(AuthoMove => AuthoMove.USUARIO_EDITA, Autho => Autho.MapFrom(a => string.Empty));
             CreateMap<IT_CONTENIDO_GENERAL, IT_CONTENIDO_GENERAL_AUDITORIA>();
             CreateMap<IT_AUTORIZACION, IT_AUTORIZACION_AUDITORIA>();
+            CreateMap<IT_ACTIVE_DIRECTORY_USER, UserVM>()
+                .ForMember(User => User.UserFullName, Active => Active.MapFrom(a => a.Display_Name))
+                .ForMember(User => User.UserName, Active => Active.MapFrom(a => a.Email_Address.Substring(0, a.Email_Address.IndexOf("@imarpe.gob.pe"))))
+                .ForMember(User => User.Email, Active => Active.MapFrom(a => a.Email_Address))
+                .ForMember(User => User.UserType, Active => Active.MapFrom(a => a.IT_USER_TYPE));
+            CreateMap<IT_ACTIVE_DIRECTORY_USER, User>()
+                .ForMember(User => User.DisplayName, Active => Active.MapFrom(a => a.Display_Name))
+                .ForMember(User => User.UserName, Active => Active.MapFrom(a => a.Email_Address.Substring(0, a.Email_Address.IndexOf("@imarpe.gob.pe"))))
+                .ForMember(User => User.Email, Active => Active.MapFrom(a => a.Email_Address))
+                .ForMember(User => User.UserType, Active => Active.MapFrom(a => a.USER_TYPE_ID));
+            CreateMap<UserVM, User>();
         }
     }
 }

@@ -5,6 +5,7 @@ using Intranet.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Intranet.Services.AuthorizationState
@@ -36,8 +37,8 @@ namespace Intranet.Services.AuthorizationState
         }
         public List<AuthorizationVM> GetAuthorizationPaging(DateTime? start, DateTime? end, string phrase = "", int page = 0, int size = -1) 
         {
-            var users = this._mapper.Map<List<PersonalVM>>(this._unitOfWork.PersonalRepository.Get( p => p.cod_personal.Contains(phrase) || p.nombre.Contains(phrase)).ToList());
-            var userIds = users.Select(p => p.cod_personal).ToList();
+            var users = this._mapper.Map<List<UserVM>>(this._unitOfWork.ActiveDirectoryUsers.Get( p => p.Display_Name.Contains(phrase) || p.DNI.Contains(phrase)).ToList());
+            var userIds = users.Select(p => p.DNI).ToList();
 
             var authos = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(
                 a => userIds.Contains(a.USUARIO_CREA) && start.Value <= a.FECHA_CREACION.Value && a.FECHA_CREACION.Value <= end.Value,
@@ -45,7 +46,7 @@ namespace Intranet.Services.AuthorizationState
                 page, size));
 
             authos.ForEach(a => {
-                a.OWNERUSER = users.Find(u => u.cod_personal.Trim().Equals(a.USUARIO_CREA));
+                a.OWNERUSER = users.Find(u => u.DNI.Trim().Equals(a.USUARIO_CREA));
             });
             return authos;
         }
@@ -56,23 +57,15 @@ namespace Intranet.Services.AuthorizationState
             overview.ID_USUARIO = userId;
             if (start.HasValue && end.HasValue)
             {
-                List<AuthorizationVM> authorizations = null;
+                List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.StoredProcedures.Sp_Commissions(userId, null, start, end, 10, 1));
 
                 if (string.IsNullOrWhiteSpace(userId))
                 {
-                    authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(a => start.Value <= a.FECHA_CREACION.Value && a.FECHA_CREACION.Value <= end.Value, q => q.OrderByDescending(au => au.FECHA_CREACION)).ToList());
-                    var users = this._unitOfWork.AttendanceRepository.Get().Select(u => (u.id_personal, u.nombres)).Distinct().Select(u => {
-                        var user = new PersonalVM();
-                        user.cod_personal = u.id_personal;
-                        user.nombre = u.nombres.Trim();
-                        return user;
-                    }).ToList();
+                    var users = this._mapper.Map<List<UserVM>>(this._unitOfWork.ActiveDirectoryUsers.Get(a => !string.IsNullOrEmpty(a.DNI)).Distinct().ToList());
                     authorizations.ForEach( a => {
-                        a.OWNERUSER = users.Find(u => u.cod_personal.Trim().Equals(a.USUARIO_CREA));
+                        a.OWNERUSER = users.Find(u => u.DNI.Trim().Equals(a.USUARIO_CREA));
                     });
                 }
-                else
-                    authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(a => start.Value <= a.FECHA_CREACION.Value && a.FECHA_CREACION.Value <= end.Value && a.USUARIO_CREA.Equals(userId), q => q.OrderByDescending(au => au.FECHA_CREACION)).ToList());
 
                 var states = this._unitOfWork.AuthorizationStatus.Get().ToList();
 
@@ -101,17 +94,16 @@ namespace Intranet.Services.AuthorizationState
         {
             this._authorization = this._unitOfWork.Authorizations.GetById(id);
             this.Authorization = this._mapper.Map<AuthorizationVM>(this._authorization);
-            this.Authorization.LISTA_DE_ESTADOS = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
-            this.Authorization.LISTA_DE_MOVIMIENTOS = this._mapper.Map<List<AuthorizationMovementVM>>(this._unitOfWork.MovementAuthorizations.Get(m => m.ID_AUTORIZACION == id).ToList());
-            this.Authorization.ESTADO = this.Authorization.LISTA_DE_ESTADOS.Find(s => s.ESTADO_ID.Equals(this.Authorization.ID_ESTADO));
-            var idList = this.Authorization.LISTA_DE_MOVIMIENTOS.Select(m => m.ID_ESTADO).ToList();
-            this.Authorization.LISTA_DE_ESTADOS_PROPIO = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get(e => idList.Contains(e.ESTADO_ID)).ToList());
+            this.Authorization.NOMBRE_AREA_FUNCIONAL = this._unitOfWork.FunctionalAreas.GetById(this.Authorization.ID_AREA_FUNCIONAL).NOMBRE_AREA_FUNCIONAL;
+            IncludeStatesList();
+            IncludeFunctionalAreas();
+            IncludeOwnMovementsListAndStatesList();
 
-            this.Authorization.OWNERUSER = this._unitOfWork.AttendanceRepository.Get(a => a.id_personal == this.Authorization.USUARIO_CREA)
+            this.Authorization.OWNERUSER = this._unitOfWork.ActiveDirectoryUsers.Get(a => a.DNI == this.Authorization.USUARIO_CREA)
                 .Select(u => {
-                    var user = new PersonalVM();
-                    user.cod_personal = u.id_personal;
-                    user.nombre = u.nombres;
+                    var user = new UserVM();
+                    user.DNI = u.DNI;
+                    user.UserFullName = u.Display_Name;
                     return user;
                 }).First();
 
@@ -135,6 +127,11 @@ namespace Intranet.Services.AuthorizationState
             this.Authorization = this._mapper.Map<AuthorizationVM>(this._authorization);
         }
 
+        public IT_AUTORIZACION GetAuthorization()
+        {
+            return this._authorization;
+        }
+
         public AuthorizationStateManagement IncludeStatesList()
         {
             this.Authorization.LISTA_DE_ESTADOS = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
@@ -149,6 +146,15 @@ namespace Intranet.Services.AuthorizationState
             var idList = movementList.Select(m => m.ID_ESTADO).ToList();
             var ownStateList = this._unitOfWork.AuthorizationStatus.Get(e => idList.Contains(e.ESTADO_ID)).ToList();
             this.Authorization.LISTA_DE_ESTADOS_PROPIO = this._mapper.Map<List<AuthorizationStateVM>>(ownStateList);
+
+            return this;
+        }
+
+        public AuthorizationStateManagement IncludeFunctionalAreas()
+        {
+            var list = new List<FunctionalAreaVM> { new FunctionalAreaVM { AREA_FUNCIONAL_ID = 0, NOMBRE_AREA_FUNCIONAL = "-- Seleccionar Área --" } };
+            list.AddRange(this._mapper.Map<List<FunctionalAreaVM>>(this._unitOfWork.FunctionalAreas.Get().ToList()));
+            this.Authorization.LISTA_AREAS_FUNCIONALES = list;
 
             return this;
         }
@@ -205,12 +211,12 @@ namespace Intranet.Services.AuthorizationState
             }
             else
             {
-                if (!this._authorization.HORA_SALIDA.HasValue)
+                if (!this._authorization.HORA_SALIDA.HasValue && state.NOMBRE_ESTADO.Trim().ToLower().Equals("ejecutado"))
                 {
                     this._authorization.HORA_SALIDA = time;
                     this._authorization.HORA_SALIDA_SEGURIDAD = time;
                 }
-                else
+                else if(state.NOMBRE_ESTADO.Trim().ToLower().Equals("finalizado"))
                 {
                     this._authorization.HORA_RETORNO = time;
                     this._authorization.HORA_RETORNO_SEGURIDAD = time;
@@ -219,7 +225,7 @@ namespace Intranet.Services.AuthorizationState
                 this._authorization.ID_ESTADO = state.ESTADO_ID;
                 this._authorization.FECHA_ULTIMO_ESTADO = DateTime.Now;
                 if (state.NOMBRE_ESTADO.Trim().ToLower().Equals("autorizado"))
-                    this._authorization.USUARIO_AUTORIZA = "08887865";
+                    this._authorization.USUARIO_AUTORIZA = "10506225";
                 this._unitOfWork.Authorizations.Update(this._authorization);
             }
 
@@ -241,6 +247,46 @@ namespace Intranet.Services.AuthorizationState
         public IT_AUTORIZACION_AUDITORIA GetAuthorizationAuditory()
         {
             return this._mapper.Map<IT_AUTORIZACION_AUDITORIA>(this._authorization);
+        }
+
+        public void ValidateDialing()
+        {
+            while (true)
+            {
+                DateTime today = DateTime.Now;
+                var status = this._unitOfWork.AuthorizationStatus.Get().ToList();
+                var authorizedStatus = status.Where(s => s.NOMBRE_ESTADO.ToLower().Equals("autorizado")).First();
+                var executedStatus = status.Where(s => s.NOMBRE_ESTADO.ToLower().Equals("ejecutado")).First();
+                var dayMarkings = this._unitOfWork.AttendanceRepository.Get(a => a.fecha.Value.Year == today.Year && a.fecha.Value.DayOfYear == today.DayOfYear).ToList();
+
+                dayMarkings.ForEach(autho => {
+
+                    var dayAuthorizedCommissions = this._unitOfWork.Authorizations.Get(a => a.ID_ESTADO == authorizedStatus.ESTADO_ID && a.FECHA_SALIDA_PROG.Value.Day == today.Day).ToList();
+                    var dayExecutedCommissions = this._unitOfWork.Authorizations.Get(a => a.ID_ESTADO == executedStatus.ESTADO_ID && a.FECHA_SALIDA_PROG.Value.Day == today.Day).ToList();
+
+                    if (dayAuthorizedCommissions.Select(d => d.USUARIO_CREA).Contains(autho.id_personal) && autho.hora_salida != null)
+                    {
+                        var authorizedComission = dayAuthorizedCommissions.Find(a => a.USUARIO_CREA.Trim().Equals(autho.id_personal.Trim()));
+                        this._authorization = authorizedComission;
+                        SwitchTo("ejecutado", autho.hora_salida);
+                    }
+
+                    /*if (dayExecutedCommissions.Select(d => d.USUARIO_CREA).Contains(autho.id_personal) && autho.hora_salida == null)
+                    {
+                        var executedComission = dayAuthorizedCommissions.Find(a => a.USUARIO_CREA.Trim().Equals(autho.id_personal.Trim()));
+                        executedComission.HORA_RETORNO = autho.hora_ingreso;
+
+                        this._unitOfWork.Authorizations.Update(executedComission);
+                    }*/
+                });
+                Thread.Sleep(5000);
+            }
+        }
+
+        public void run()
+        {
+            Thread thread = new Thread(new ThreadStart(this.ValidateDialing));
+            thread.Start();
         }
     }
 }

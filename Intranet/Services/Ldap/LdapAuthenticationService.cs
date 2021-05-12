@@ -43,6 +43,7 @@ namespace Intranet.Services.Ldap
 
                             return new User
                             {
+                                IsAuthenticated = true,
                                 DisplayName = displayName == null || displayName.Count <= 0 ? null : displayName[0].ToString(),
                                 UserName = samAccountName == null || samAccountName.Count <= 0 ? null : samAccountName[0].ToString(),
                                 DNI = dni == null || dni.Count <= 0 ? null : dni[0].ToString(),
@@ -54,8 +55,7 @@ namespace Intranet.Services.Ldap
             }
             catch (Exception ex)
             {
-                // if we get an error, it means we have a login failure.
-                // Log specific exception
+                return new User { IsAuthenticated = false, DisplayName = ex.Message};
             }
             return null;
         }

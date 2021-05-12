@@ -1,148 +1,394 @@
 ﻿@model Intranet.ViewModels.AuthorizationVM
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Editar";
+    var functionalAreas = new SelectList(Model.LISTA_AREAS_FUNCIONALES, "AREA_FUNCIONAL_ID", "NOMBRE_AREA_FUNCIONAL");
 }
 
-<h1>Edit</h1>
+<h1>Editar la papeleta</h1>
 
-<h4>AuthorizationVM</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="AUTORIZACION_ID" class="control-label"></label>
-                <input asp-for="AUTORIZACION_ID" class="form-control" />
-                <span asp-validation-for="AUTORIZACION_ID" class="text-danger"></span>
+
+<form asp-controller="Authorization" asp-action="Edit" enctype="multipart/form-data" method="post">
+    <div class="form-horizontal">
+        <hr />
+        <div class="card border-dark mb-3" style="max-width: 70rem;">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="card-header text-dark"><h4>Complete los datos requeridos</h4></div>
+            <div class="card-body text-dark">
+                @Html.HiddenFor(model => model.AUTORIZACION_ID)
+
+                <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
+                    <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <label asp-for="ESTADO" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-file-alt"></i></span>
+                            </div>
+                            <input asp-for="ESTADO.NOMBRE_ESTADO" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="OWNERUSER" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input asp-for="OWNERUSER.UserFullName" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="NOMBRE_AREA_FUNCIONAL" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="form-inline input-group col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-warehouse"></i></span>
+                            </div>
+                            <select asp-for="ID_AREA_FUNCIONAL" class="form-control" id="Areas"
+                                    asp-items="@functionalAreas"></select>
+                            @Html.HiddenFor(model => model.ID_AREA_FUNCIONAL)
+                            @Html.HiddenFor(model => model.ID_TIPO_USUARIO)
+                        </div>
+                        <span asp-validation-for="ID_AREA_FUNCIONAL" class="text-danger font-weight-bold areas-message text-right"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="USUARIO_CREA" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-address-card"></i></span>
+                            </div>
+                            <input asp-for="USUARIO_CREA" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_CREACION" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input class="form-control text-box single-line" disabled="disabled" name="FECHA_CREACION" value="@Model.FECHA_CREACION">
+                            @Html.HiddenFor(model => model.FECHA_CREACION)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row justify-content-xl-center justify-content-sm-center justify-content-md-center justify-content-lg-center">
+                    <div class="form-group">
+                        <label asp-for="MOTIVO" class="control-label col-md-4 font-weight-bold justify-content-xl-start justify-content-sm-start justify-content-md-start justify-content-lg-start"></label>
+                        <div class="form-inline input-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-align-justify"></i></span>
+                            </div>
+                            <input asp-for="MOTIVO" placeholder="Ingresa el motivo" class="form-control text-box single-line" id="MOTIVO" name="MOTIVO">
+                        </div>
+                        <span class="text-danger font-weight-bold motive-message"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_SALIDA_PROG" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input asp-for="FECHA_SALIDA_PROG" class="form-control exit" , placeholder="ingrese la fecha de salida" onfocusout="validateDate(this)" />
+                            @Html.ValidationMessageFor(model => model.FECHA_SALIDA_PROG, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+
+                    <div class="form-group form-inline col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <label asp-for="FECHA_RETORNO_PROG" class="control-label col-md-4 font-weight-bold"></label>
+                        <div class="col-md-8 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input asp-for="FECHA_RETORNO_PROG" class="form-control return" , placeholder="ingrese la fecha de salida" onfocusout="validateDate(this)" />
+                            @Html.ValidationMessageFor(model => model.FECHA_RETORNO_PROG, "", new { @class = "text-danger font-weight-bold" })
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row justify-content-xl-end justify-content-sm-end justify-content-md-end justify-content-lg-end">
+                    <div class="form-group form-inline col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                        <span class="validate-formulary text-danger font-weight-bold"></span>
+                    </div>
+                    <div class="form-group form-inline col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="customSwitches">
+                            <label class="custom-control-label" for="customSwitches">Sin hora de retorno</label>
+                        </div>
+                        @Html.HiddenFor(model => model.RETORNO, new { Value = "SI" })
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+                    <div class="form-group col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                        <label asp-for="DESCRIPCION" class="control-label font-weight-bold col-xs-4 col-sm-4 col-md-4 col-lg-4"></label>
+                        <div class="col-md-12 form-inline input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text text-dark"><i class="fas fa-file-alt"></i></span>
+                            </div>
+                            <textarea asp-for="DESCRIPCION" class="form-control" placeholder="Ingresa la descripción" style="max-width:100%;"></textarea>
+                            @Html.ValidationMessageFor(model => model.DESCRIPCION, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1"></div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-8 form-inline">
+                        <span class="btn btn-outline-secondary btn-file" onchange="showName()" id="file-button">
+                            <i id="icon-file" class="fa fa-upload"></i>
+                            <span id="name-button">Adjuntar un archivo para la papeleta</span>
+                            <input type="file" name="file" id="file" />
+                        </span>
+                        &nbsp;
+                        <span id="fileName"></span>
+                        <br /><br />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <button id="save" type="submit" value="Edit" class="btn btn-outline-secondary">
+                            <i class="fa fa-save"></i>
+                            Editar
+                        </button>
+                    </div>
+                </div>
+
             </div>
-            <div class="form-group">
-                <label asp-for="USUARIO_CREA" class="control-label"></label>
-                <input asp-for="USUARIO_CREA" class="form-control" />
-                <span asp-validation-for="USUARIO_CREA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ID_AREA_FUNCIONAL" class="control-label"></label>
-                <input asp-for="ID_AREA_FUNCIONAL" class="form-control" />
-                <span asp-validation-for="ID_AREA_FUNCIONAL" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MOTIVO" class="control-label"></label>
-                <input asp-for="MOTIVO" class="form-control" />
-                <span asp-validation-for="MOTIVO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RETORNO" class="control-label"></label>
-                <input asp-for="RETORNO" class="form-control" />
-                <span asp-validation-for="RETORNO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_SALIDA_PROG_DATE_TIME" class="control-label"></label>
-                <input asp-for="FECHA_SALIDA_PROG_DATE_TIME" class="form-control" />
-                <span asp-validation-for="FECHA_SALIDA_PROG_DATE_TIME" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_RETORNO_PROG_DATE_TIME" class="control-label"></label>
-                <input asp-for="FECHA_RETORNO_PROG_DATE_TIME" class="form-control" />
-                <span asp-validation-for="FECHA_RETORNO_PROG_DATE_TIME" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_SALIDA" class="control-label"></label>
-                <input asp-for="HORA_SALIDA" class="form-control" />
-                <span asp-validation-for="HORA_SALIDA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_RETORNO" class="control-label"></label>
-                <input asp-for="HORA_RETORNO" class="form-control" />
-                <span asp-validation-for="HORA_RETORNO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_SALIDA_SEGURIDAD" class="control-label"></label>
-                <input asp-for="HORA_SALIDA_SEGURIDAD" class="form-control" />
-                <span asp-validation-for="HORA_SALIDA_SEGURIDAD" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_RETORNO_SEGURIDAD" class="control-label"></label>
-                <input asp-for="HORA_RETORNO_SEGURIDAD" class="form-control" />
-                <span asp-validation-for="HORA_RETORNO_SEGURIDAD" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="USUARIO_AUTORIZA" class="control-label"></label>
-                <input asp-for="USUARIO_AUTORIZA" class="form-control" />
-                <span asp-validation-for="USUARIO_AUTORIZA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ID_TIPO_USUARIO" class="control-label"></label>
-                <input asp-for="ID_TIPO_USUARIO" class="form-control" />
-                <span asp-validation-for="ID_TIPO_USUARIO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_CREACION" class="control-label"></label>
-                <input asp-for="FECHA_CREACION" class="form-control" />
-                <span asp-validation-for="FECHA_CREACION" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_EDICION" class="control-label"></label>
-                <input asp-for="FECHA_EDICION" class="form-control" />
-                <span asp-validation-for="FECHA_EDICION" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="USUARIO_EDITA" class="control-label"></label>
-                <input asp-for="USUARIO_EDITA" class="form-control" />
-                <span asp-validation-for="USUARIO_EDITA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ID_ESTADO" class="control-label"></label>
-                <input asp-for="ID_ESTADO" class="form-control" />
-                <span asp-validation-for="ID_ESTADO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DESCRIPCION" class="control-label"></label>
-                <input asp-for="DESCRIPCION" class="form-control" />
-                <span asp-validation-for="DESCRIPCION" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_ULTIMO_ESTADO" class="control-label"></label>
-                <input asp-for="FECHA_ULTIMO_ESTADO" class="form-control" />
-                <span asp-validation-for="FECHA_ULTIMO_ESTADO" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_SALIDA_PROG" class="control-label"></label>
-                <input asp-for="FECHA_SALIDA_PROG" class="form-control" />
-                <span asp-validation-for="FECHA_SALIDA_PROG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_SALIDA_PROG" class="control-label"></label>
-                <input asp-for="HORA_SALIDA_PROG" class="form-control" />
-                <span asp-validation-for="HORA_SALIDA_PROG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FECHA_RETORNO_PROG" class="control-label"></label>
-                <input asp-for="FECHA_RETORNO_PROG" class="form-control" />
-                <span asp-validation-for="FECHA_RETORNO_PROG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HORA_RETORNO_PROG" class="control-label"></label>
-                <input asp-for="HORA_RETORNO_PROG" class="form-control" />
-                <span asp-validation-for="HORA_RETORNO_PROG" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UNIDAD_ORGANICA" class="control-label"></label>
-                <input asp-for="UNIDAD_ORGANICA" class="form-control" />
-                <span asp-validation-for="UNIDAD_ORGANICA" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
-</div>
+</form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Volver a la lista</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script type="text/javascript">
+
+    function showName() {
+        var filename = $("#file").val().split('\\').pop();
+        $("#icon-file").removeClass("fa-upload");
+        $("#icon-file").addClass("fa-file-archive-o");
+        $("#name-button").text(filename);
+    };
+
+    function marcar(value) {
+        $('#ID_MOTIVO').val(value.firstElementChild.id);
+    }
+
+    function validateFunctionalAreas() {
+        let result = parseInt(document.getElementById("Areas").value);
+        if (result <= 0) {
+            $('.areas-message').text("* Seleccinar área")
+        }
+        return result > 0;
+    }
+
+    function validateDate(dateLabel) {
+        var span = $("#" + dateLabel.id).next();
+        let flag = validateDateFormat(dateLabel.value);
+        if (!flag)
+            span.text("Formato no valido");
+    }
+
+    function validateDateFormat(date) {
+
+        let formatDate = /[0123]\d[/][01]\d[/]\d\d\d\d/;
+        return moment(date, "dd/MM/yyyy").isValid() && formatDate.test(date) && date.length == 10;
+    }
+
+    function validateTimeFormat(time) {
+        let result = true;
+        let formatTime = /[01]\d:\d\d( (([Aa]|[Pp])[Mm])|(([Aa]|[Pp])[Mm]))/;
+
+        if (7 > time.length || time.length > 8 || !formatTime.test(time))
+            result = false;
+
+        return result;
+    }
+
+    function validateMotives() {
+        let result = false;
+        $('#MOTIVO').each(function () {
+            if (this.value.length > 0) {
+                result = true;
+            }
+        });
+
+        if (result)
+            $('.motive-message').text("");
+        else
+            $('.motive-message').text("* Ingresar motivo")
+
+        return result;
+    }
+
+    function validateDateAndTimeOfDeparture() {
+        let result = true;
+
+        $('.exit').each(function () {
+            if (this.value.trim().length == 0) {
+                result = false;
+                $("#" + this.id).next().text("*");
+            }
+            else
+                $("#" + this.id).next().text("");
+        });
+
+        return result;
+    }
+
+    function validateDateAndTimeOfReturn() {
+        let result = true;
+        let isChecked = $('#customSwitches').prop('checked');
+        if (!isChecked) {
+            $('.return').each(function () {
+                if (this.value.trim().length == 0) {
+                    result = false;
+                    $("#" + this.id).next().text("*");
+                }
+                else
+                    $("#" + this.id).next().text("");
+            });
+        }
+
+        return result;
+    }
+
+    function validateDateAndTime() {
+        let result = true;
+
+        result = validateFunctionalAreas();
+
+        result = validateDateAndTimeOfDeparture() && result;
+
+        result = validateDateAndTimeOfReturn() && result;
+
+        if (result)
+            $('.validate-formulary').text("");
+        else
+            $('.validate-formulary').text("* Algunos campos estan vacios o no cumplen con el formato");
+
+        return result;
+    }
+
+    $(document).ready(function () {
+
+        
+
+        $("#FECHA_SALIDA_PROG").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $("#FECHA_SALIDA_PROG").change(function () {
+            let date = moment(this.value, "DD/MM/YYYY");
+            $("#FECHA_RETORNO_PROG").val(date.format("DD/MM/YYYY"));
+        });
+
+        $("#FECHA_RETORNO_PROG").daterangepicker({
+            singleDatePicker: true,
+            locale: {
+                format: 'DD/MM/YYYY'
+            }
+        });
+
+        $('#HORA_SALIDA_PROG').change(function () {
+            let flag = validateTimeFormat(this.value);
+            let horaRetorno = $("#HORA_RETORNO_PROG");
+            if (flag) {
+                let time = moment(this.value, "LT").add(1, "hour");
+                $("#" + this.id).next().text("");
+                let tmp = time.format("LT");
+                if (tmp.length < 8) {
+                    tmp = "0" + tmp;
+                }
+                horaRetorno.val(tmp);
+            }
+            else {
+                if (this.value.trim().length > 0)
+                    $("#" + this.id).val(moment().format("hh:mmA"));
+            }
+        });
+
+        $('#HORA_RETORNO_PROG').change(function () {
+            let flag = validateTimeFormat(this.value);
+            if (flag) {
+                $("#" + this.id).next().text("");
+            }
+            else {
+                if (this.value.trim().length > 0)
+                    horaSalida.val(moment().format("hh:mmA"));
+            }
+        });
+
+        $("#customSwitches").change(function () {
+            if (this.checked) {
+                $("#FECHA_RETORNO_PROG").attr("placeholder", $("#FECHA_RETORNO_PROG").val())
+                $("#HORA_RETORNO_PROG").attr("placeholder", $("#HORA_RETORNO_PROG").val())
+                $("#FECHA_RETORNO_PROG").val("");
+                $("#HORA_RETORNO_PROG").val("");
+                $("#FECHA_RETORNO_PROG").prop("disabled", true);
+                $("#HORA_RETORNO_PROG").prop("disabled", true);
+                $("#FECHA_RETORNO_PROG").next().text("");
+                $("#HORA_RETORNO_PROG").next().text("");
+                $("#RETORNO").val("NO");
+            }
+            else {
+                $("#FECHA_RETORNO_PROG").val($("#FECHA_RETORNO_PROG").attr("placeholder"));
+                $("#HORA_RETORNO_PROG").val($("#HORA_RETORNO_PROG").attr("placeholder"));
+                $("#HORA_RETORNO_PROG").attr("placeholder", "ingrese la fecha de salida");
+                $("#HORA_RETORNO_PROG").attr("placeholder", "ingrese la hora de retorno");
+                $("#FECHA_RETORNO_PROG").prop("disabled", false);
+                $("#HORA_RETORNO_PROG").prop("disabled", false);
+                $("#RETORNO").val("SI");
+            }
+        });
+
+        $('.clockpicker').clockpicker({
+            placement: 'top',
+            align: 'left',
+            donetext: 'Done',
+            twelvehour: true
+        });
+
+        $('#save').click(function () {
+            $('#USER_USER_NAME').prop("disabled", false);
+            $('#USUARIO_CREA').prop("disabled", false);
+            $('#UNIDAD_ORGANICA').prop("disabled", false);
+            let flag = validateMotives();
+            flag = validateDateAndTime() && flag;
+            let button = $('#save');
+            button.prop("disabled", !flag);
+            setTimeout(() => button.prop("disabled", false), 500);
+        });
+
+        $('.right-format').change(function () {
+            var value = this.value;
+            this.value = value.substring(0, value.length - 2) + " " + value.substring(value.length - 2);
+        });
+
+    });
+
+</script>
