@@ -42,16 +42,42 @@ namespace Intranet.Controllers
         public ActionResult Index()
         {
             UserVM user = GetDataUserCookie();
+            IndexVM Index = new IndexVM();
 
-            List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.StoredProcedures.Sp_Commissions(user.DNI));
+            Index.Authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.StoredProcedures.Sp_Commissions(user.DNI, null, null, null, 5, 1));
+            int total = this._unitOfWork.StoredProcedures.Sp_Commissions(user.DNI, null, null, null, null, null).Count();
+            Index.TotalPages = total % 5 == 0 ? total/5: (total / 5) + 1;
+            Index.CurrentPage = 1;
+
             var states = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
 
-            foreach (var authorization in authorizations)
+            foreach (var authorization in Index.Authorizations)
             {
                 authorization.ESTADO = states.Find(s => s.ESTADO_ID == authorization.ID_ESTADO);
             }
 
-            return View(authorizations);
+            return View(Index);
+        }
+
+        [HttpPost]
+        public ActionResult Index(string phrase = null, int page = 1)
+        {
+            UserVM user = GetDataUserCookie();
+            IndexVM Index = new IndexVM();
+
+            Index.Authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.StoredProcedures.Sp_Commissions(user.DNI, null, null, null, 5, page));
+            int total = this._unitOfWork.StoredProcedures.Sp_Commissions(user.DNI, null, null, null, null, null).Count();
+            Index.TotalPages = total % 5 == 0 ? total / 5 : (total / 5) + 1;
+            Index.CurrentPage = page;
+
+            var states = this._mapper.Map<List<AuthorizationStateVM>>(this._unitOfWork.AuthorizationStatus.Get().ToList());
+
+            foreach (var authorization in Index.Authorizations)
+            {
+                authorization.ESTADO = states.Find(s => s.ESTADO_ID == authorization.ID_ESTADO);
+            }
+
+            return View(Index);
         }
 
         public ActionResult Overview()
@@ -59,7 +85,27 @@ namespace Intranet.Controllers
             UserVM user = GetDataUserCookie();
             if (user != null && user.UserTypeName.ToLower().Contains("admin"))
             {
-                OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-20), DateTime.Now);
+                OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-50), DateTime.Now);
+                overview.Authorization = new AuthorizationVM();
+                return View(overview);
+            }
+            else if (user.UserTypeName.ToLower().Contains("estandar"))
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                return RedirectToAction(nameof(Watchview));
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Overview(string phrase = null, int page = 1)
+        {
+            UserVM user = GetDataUserCookie();
+            if (user != null && user.UserTypeName.ToLower().Contains("admin"))
+            {
+                OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-50), DateTime.Now, null, phrase, page);
                 overview.Authorization = new AuthorizationVM();
                 return View(overview);
             }
@@ -75,7 +121,7 @@ namespace Intranet.Controllers
 
         public ActionResult Watchview()
         {
-            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-5), DateTime.Now);
+            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-50), DateTime.Now);
             overview.Authorization = new AuthorizationVM();
             return View(overview);
         }
@@ -84,7 +130,17 @@ namespace Intranet.Controllers
         {
             UserVM user = GetDataUserCookie();
 
-            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-5), DateTime.Now);
+            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-50), DateTime.Now);
+            overview.Authorization = new AuthorizationVM();
+            return View(overview);
+        }
+
+        [HttpPost]
+        public ActionResult HRview(string phrase = null, int page = 1)
+        {
+            UserVM user = GetDataUserCookie();
+
+            OverviewVM overview = this._authorizationStateManagement.GetOverviewListbyUserforStates(DateTime.Now.AddDays(-50), DateTime.Now, null, phrase, page);
             overview.Authorization = new AuthorizationVM();
             return View(overview);
         }

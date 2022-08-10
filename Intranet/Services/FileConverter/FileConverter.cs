@@ -20,7 +20,7 @@ namespace Intranet.Services.FileConverter
         {
             byte[] fileBytes = null;
 
-            if (fileBytes != null && file.Length > 0)
+            if (fileBytes != null || file.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
                 {

@@ -9,7 +9,7 @@
 <div class="form-horizontal">
     <div class="form-horizontal">
         <div class="input-group d-flex justify-content-center">
-            <input type="search" class="form-control rounded col-xs-8 col-sm-8 col-md-8 col-lg-8" placeholder="Buscar" aria-label="Buscar"
+            <input id="search" type="search" class="form-control rounded col-xs-8 col-sm-8 col-md-8 col-lg-8" placeholder="Buscar" aria-label="Buscar"
                    aria-describedby="search-addon" />
             <button type="button" class="btn btn-outline-dark">buscar</button>
             <!--<button type="button" class="btn btn-outline-secondary" onclick="changeview()">cambiar de vista</button>-->
@@ -21,97 +21,124 @@
     <div class="card border-dark mb-3 main-table" style="max-width: 70rem;">
         <div class="card-header text-dark"><h4>Datos de las comisiones</h4></div>
         <div class="card-body text-dark">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>
-                            <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
-                        </th>
-                        <th>
-                            <label asp-for="Authorization.ESTADO" class="control-label font-weight-bold"></label>
-                        </th>
-                        <th>
-                            <label asp-for="Authorization.MOTIVO" class="control-label font-weight-bold"></label>
-                        </th>
-                        <th>
-                            <label asp-for="Authorization.RETORNO" class="control-label font-weight-bold"></label>
-                        </th>
-                        <th>
-                            <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
-                        </th>
-                        <th>
-                            <label asp-for="Authorization.FECHA_SALIDA_PROG" class="control-label font-weight-bold"></label>
-                        </th>
-                        <th>
-                            <label asp-for="Authorization.FECHA_RETORNO_PROG" class="control-label font-weight-bold"></label>
-                        </th>
-                        <th>
-                            <label class="control-label font-weight-bold">Operaciones</label>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Authorizations)
-                    {
+            <form asp-action="HRview" asp-controller="Authorization" method="post">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => modelItem.LISTA_DE_ESTADOS.Find(m => m.ESTADO_ID.Equals(item.ID_ESTADO)).NOMBRE_ESTADO, new { htmlAttributes = new { @class = "form-control" } })
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.MOTIVO, new { htmlAttributes = new { @class = "form-control" } })
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.RETORNO, new { htmlAttributes = new { @class = "form-control" } })
-                            </td>
-                            <td>
-                                @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
-                            </td>
-                            <td>
-                                @if (item.HORA_SALIDA.HasValue)
-                                {
-                                    @item.HORA_SALIDA.Value.ToString("dd/MM/yyyy hh:mm tt")
-                                }
-                                else
-                                {
-                                    <label class="control-label font-weight-bold">--</label>
-                                }
-                            </td>
-                            <td>
-                                @if (item.RETORNO.Trim().ToLower().Equals("si") && item.HORA_RETORNO.HasValue)
-                                {
-                                    @item.HORA_RETORNO.Value.ToString("dd/MM/yyyy hh:mm tt")
-                                }
-                                else if (item.RETORNO.Trim().ToLower().Equals("no"))
-                                {
-                                    <label class="control-label font-weight-bold">Sin retorno</label>
-                                }
-                                else
-                                {
-                                    <label class="control-label font-weight-bold">--</label>
-                                }
-                            </td>
-                            <td>
-                                <div class="form-inline">
-                                    @if (Model.LISTA_DE_ESTADOS.Where(e => e.ESTADO_ID == item.ID_ESTADO).First().NOMBRE_ESTADO.ToLower().Equals("autorizado") || Model.LISTA_DE_ESTADOS.Where(e => e.ESTADO_ID == item.ID_ESTADO).First().NOMBRE_ESTADO.ToLower().Equals("ejecutado"))
-                                    {
-                                        <button type="button" title="Operar" value="Operar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Change-state-hr", "Authorization", new { id = item.AUTORIZACION_ID })'">
-                                            <i class="fa fa-edit"></i>
-                                            Marcar
-                                        </button>
-                                    }
-                                    <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
-                                        <i class="fa fa-edit"></i>
-                                        Detalle
-                                    </button>
-                                </div>
-                            </td>
+                            <th>
+                                <label asp-for="Authorization.OWNERUSER" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.ESTADO" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.MOTIVO" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.RETORNO" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_CREACION" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_SALIDA_PROG" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label asp-for="Authorization.FECHA_RETORNO_PROG" class="control-label font-weight-bold"></label>
+                            </th>
+                            <th>
+                                <label class="control-label font-weight-bold">Operaciones</label>
+                            </th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Authorizations)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.OWNERUSER.UserFullName, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => modelItem.LISTA_DE_ESTADOS.Find(m => m.ESTADO_ID.Equals(item.ID_ESTADO)).NOMBRE_ESTADO, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MOTIVO, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RETORNO, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @item.FECHA_CREACION.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                </td>
+                                <td>
+                                    @if (item.HORA_SALIDA.HasValue)
+                                    {
+                                        @item.HORA_SALIDA.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                    }
+                                    else
+                                    {
+                                        <label class="control-label font-weight-bold">--</label>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.RETORNO.Trim().ToLower().Equals("si") && item.HORA_RETORNO.HasValue)
+                                    {
+                                        @item.HORA_RETORNO.Value.ToString("dd/MM/yyyy hh:mm tt")
+                                    }
+                                    else if (item.RETORNO.Trim().ToLower().Equals("no"))
+                                    {
+                                        <label class="control-label font-weight-bold">Sin retorno</label>
+                                    }
+                                    else
+                                    {
+                                        <label class="control-label font-weight-bold">--</label>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="form-inline">
+                                        @if (Model.LISTA_DE_ESTADOS.Where(e => e.ESTADO_ID == item.ID_ESTADO).First().NOMBRE_ESTADO.ToLower().Equals("autorizado") || Model.LISTA_DE_ESTADOS.Where(e => e.ESTADO_ID == item.ID_ESTADO).First().NOMBRE_ESTADO.ToLower().Equals("ejecutado"))
+                                        {
+                                            <button type="button" title="Operar" value="Operar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Change-state-hr", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                                <i class="fa fa-edit"></i>
+                                                Marcar
+                                            </button>
+                                        }
+                                        <button type="button" title="Operar" value="Operar" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                            <i class="fa fa-edit"></i>
+                                            Detalle
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <nav aria-label="...">
+                    <ul class="pagination">
+                        <!--<li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>-->
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            @if (i == Model.CurrentPage)
+                            {
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">@i<span class="sr-only">(current)</span></a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item"><a class="page-link" href="javascript:PagerClick(@i);">@i</a></li>
+                            }
+                        }
+                        <!--<li class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>-->
+                    </ul>
+                </nav>
+                <input type="hidden" id="phrase_id" name="phrase" />
+                <input type="hidden" id="page_id" name="page" />
+            </form>
         </div>
     </div>
 </div>
@@ -422,6 +449,12 @@
 </div>
 
 <script type="text/javascript">
+
+    function PagerClick(index) {
+        document.getElementById("phrase_id").value = document.getElementById("search").value;
+        document.getElementById("page_id").value = index;
+        document.forms[1].submit();
+    }
 
     $(document).ready(function () {
         $(".body-content").addClass("col-xs-11 col-sm-11 col-md-11 col-lg-11")

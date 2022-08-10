@@ -1,78 +1,118 @@
-﻿@model IEnumerable<Intranet.ViewModels.AuthorizationVM>
+﻿@model Intranet.ViewModels.IndexVM
 
 @{
     ViewData["Title"] = "Lista de papeletas registradas";
 }
 
-<h1>Lista de papeletas registradas</h1>
+<h2>Lista de papeletas registradas</h2>
 
 <div class="row container form-inline col-xs-12 col-sm-12 col-md-12 col-lg-12">
     <p>
         <a asp-action="Create" type="button" class="btn btn-outline-info">Solicitar comisión</a>
     </p>
 </div>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FECHA_SALIDA_PROG)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MOTIVO)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ESTADO)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FECHA_CREACION)
-            </th>
-            <th>
-                Operaciones
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FECHA_SALIDA_PROG)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MOTIVO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ESTADO.NOMBRE_ESTADO)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FECHA_CREACION.Value)
-            </td>
-            <td>
-                <div class="form-inline">
-                    @if (item.ESTADO.NOMBRE_ESTADO.ToLower().Equals("pendiente"))
+<div class="card border-dark mb-3 main-table" style="max-width: 70rem;">
+    <div class="card-header text-dark"><h4>Datos de las comisiones</h4></div>
+    <div class="card-body text-dark">
+        <form asp-action="Index" asp-controller="Authorization" method="post">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Authorization.FECHA_SALIDA_PROG)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Authorization.MOTIVO)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Authorization.ESTADO)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Authorization.FECHA_CREACION)
+                        </th>
+                        <th>
+                            Operaciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Authorizations)
                     {
-                        <button type="button" title="Editar" value="Editar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Edit", "Authorization", new { id = item.AUTORIZACION_ID })'">
-                            <i class="fa fa-edit"></i>
-                            Editar
-                        </button>
-                        <button type="button" class="btn btn-outline-danger" title="Borrar" value="Borrar" onclick="location.href='@Url.Action("Cancel", "Authorization", new { id = item.AUTORIZACION_ID })'">
-                            <i class="fa fa-trash-o"></i>
-                            Cancelar
-                        </button>
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FECHA_SALIDA_PROG)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MOTIVO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ESTADO.NOMBRE_ESTADO)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FECHA_CREACION.Value)
+                            </td>
+                            <td>
+                                <div class="form-inline">
+                                    @if (item.ESTADO.NOMBRE_ESTADO.ToLower().Equals("pendiente"))
+                                    {
+                                        <button type="button" title="Editar" value="Editar" class="btn btn-outline-success" onclick="location.href='@Url.Action("Edit", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                            <i class="fa fa-edit"></i>
+                                            Editar
+                                        </button>
+                                        <button type="button" class="btn btn-outline-danger" title="Borrar" value="Borrar" onclick="location.href='@Url.Action("Cancel", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                            <i class="fa fa-trash-o"></i>
+                                            Cancelar
+                                        </button>
+                                    }
+                                    <button type="button" title="Detalle" value="Detalle" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
+                                        <i class="fa fa-eye"></i>
+                                        Detalle
+                                    </button>
+                                </div>
+                                <!--
+                                Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                                Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                                Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                                -->
+                            </td>
+                        </tr>
                     }
-                    <button type="button" title="Detalle" value="Detalle" class="btn btn-outline-info" onclick="location.href='@Url.Action("Details", "Authorization", new { id = item.AUTORIZACION_ID })'">
-                        <i class="fa fa-eye"></i>
-                        Detalle
-                    </button>
-                </div>
-                <!--
-                Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                -->
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                </tbody>
+            </table>
+            <input type="hidden" id="page_id" name="page" />
+        </form>
+    </div>
+</div>
+
+<nav aria-label="...">
+    <ul class="pagination">
+        <!--<li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>-->
+        @for (int i = 1; i <= Model.TotalPages; i++)
+        {
+            @if (i == Model.CurrentPage)
+            {
+                <li class="page-item active">
+                    <a class="page-link" href="#">@i<span class="sr-only">(current)</span></a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item"><a class="page-link" href="javascript:PagerClick(@i);">@i</a></li>
+            }
+        }
+        <!--<li class="page-item">
+            <a class="page-link" href="#">Next</a>
+        </li>-->
+    </ul>
+</nav>
+
 <p class="text-xl-right">Nota: Solo puedes editar o cancelar la solicitud cuendo se encuentra en pendiente</p>
+
+<script type="text/javascript">
+    function PagerClick(index) {
+        document.getElementById("page_id").value = index;
+        document.forms[1].submit();
+    }
+</script>

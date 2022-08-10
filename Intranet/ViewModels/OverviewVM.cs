@@ -10,6 +10,8 @@ namespace Intranet.ViewModels
     {
         public string ID_USUARIO { get; set; }
         public decimal ID_AREA_FUNCIONAL { get; set; }
+        public int TotalPages { get; set; }
+        public int CurrentPage { get; set; }
         public Nullable<decimal> ID_TIPO_USUARIO { get; set; }
         [Display(Name = "Unidad Orgánica")]
         public string UNIDAD_ORGANICA { get; set; }

@@ -35,9 +35,9 @@ namespace Intranet.Services.AuthorizationState
             var movements = this._unitOfWork.MovementAuthorizations.Get().ToList();
             return authorization;
         }
-        public List<AuthorizationVM> GetAuthorizationPaging(DateTime? start, DateTime? end, string phrase = "", int page = 0, int size = -1) 
+        public List<AuthorizationVM> GetAuthorizationPaging(DateTime? start, DateTime? end, string phrase = "", int page = 0, int size = -1)
         {
-            var users = this._mapper.Map<List<UserVM>>(this._unitOfWork.ActiveDirectoryUsers.Get( p => p.Display_Name.Contains(phrase) || p.DNI.Contains(phrase)).ToList());
+            var users = this._mapper.Map<List<UserVM>>(this._unitOfWork.ActiveDirectoryUsers.Get(p => p.Display_Name.Contains(phrase) || p.DNI.Contains(phrase)).ToList());
             var userIds = users.Select(p => p.DNI).ToList();
 
             var authos = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.Authorizations.Get(
@@ -51,18 +51,22 @@ namespace Intranet.Services.AuthorizationState
             return authos;
         }
 
-        public OverviewVM GetOverviewListbyUserforStates(DateTime? start, DateTime? end, string userId = null)
+        public OverviewVM GetOverviewListbyUserforStates(DateTime? start, DateTime? end, string userId = null, string phrase = null, int page = 1, int? size = 5)
         {
             OverviewVM overview = new OverviewVM();
             overview.ID_USUARIO = userId;
             if (start.HasValue && end.HasValue)
             {
-                List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.StoredProcedures.Sp_Commissions(userId, null, start, end, 10, 1));
+                List<AuthorizationVM> authorizations = this._mapper.Map<List<AuthorizationVM>>(this._unitOfWork.StoredProcedures.Sp_Commissions(userId, phrase, start, end, size, page));
+
+                int total = this._unitOfWork.StoredProcedures.Sp_Commissions(userId, phrase, start, end, null, 1).Count();
+                overview.TotalPages = total % size.Value == 0 ? total / size.Value : (total / size.Value) + 1;
+                overview.CurrentPage = page;
 
                 if (string.IsNullOrWhiteSpace(userId))
                 {
                     var users = this._mapper.Map<List<UserVM>>(this._unitOfWork.ActiveDirectoryUsers.Get(a => !string.IsNullOrEmpty(a.DNI)).Distinct().ToList());
-                    authorizations.ForEach( a => {
+                    authorizations.ForEach(a => {
                         a.OWNERUSER = users.Find(u => u.DNI.Trim().Equals(a.USUARIO_CREA));
                     });
                 }
@@ -204,7 +208,7 @@ namespace Intranet.Services.AuthorizationState
                 this._authorization = this._mapper.Map<IT_AUTORIZACION>(this.Authorization);
                 this._authorization.ID_ESTADO = state.ESTADO_ID;
                 this._authorization.FECHA_CREACION = this._authorization.FECHA_ULTIMO_ESTADO = DateTime.Now;
-                if(string.IsNullOrEmpty(this.Authorization.FECHA_RETORNO_PROG)) this._authorization.RETORNO = "NO";
+                if (string.IsNullOrEmpty(this.Authorization.FECHA_RETORNO_PROG)) this._authorization.RETORNO = "NO";
                 this._unitOfWork.Authorizations.Add(this._authorization);
                 this._unitOfWork.Commit();
                 var nuevo = this._unitOfWork.Authorizations.Get().ToList();
@@ -216,7 +220,7 @@ namespace Intranet.Services.AuthorizationState
                     this._authorization.HORA_SALIDA = time;
                     this._authorization.HORA_SALIDA_SEGURIDAD = time;
                 }
-                else if(state.NOMBRE_ESTADO.Trim().ToLower().Equals("finalizado"))
+                else if (state.NOMBRE_ESTADO.Trim().ToLower().Equals("finalizado"))
                 {
                     this._authorization.HORA_RETORNO = time;
                     this._authorization.HORA_RETORNO_SEGURIDAD = time;
@@ -233,7 +237,7 @@ namespace Intranet.Services.AuthorizationState
             this._unitOfWork.MovementAuthorizations.Add(movements);
             var auto_audi = GetAuthorizationAuditory();
 
-            if(state.NOMBRE_ESTADO.ToLower().Equals("pendiente"))
+            if (state.NOMBRE_ESTADO.ToLower().Equals("pendiente"))
                 auto_audi.TIPO_MOVIMIENTO = "CREACION";
             else
                 auto_audi.TIPO_MOVIMIENTO = "CAMBIO DE ESTADO";
